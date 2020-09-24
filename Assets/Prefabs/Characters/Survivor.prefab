@@ -145,7 +145,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 730c06aa410e7d54a9d82f2a754c5a97, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
@@ -171,6 +171,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1222207492220009179, guid: 56a213ffd1b5f8f489823340aac7f234,
     type: 3}
   enemyDamage: 0.5
+  m_PlayerInRange: 0
+  m_Caught: 0
 --- !u!1 &6731382696257422663
 GameObject:
   m_ObjectHideFlags: 0

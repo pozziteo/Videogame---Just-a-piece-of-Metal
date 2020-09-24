@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public float timeDead;
     public float attackCooldown;
     public float shootDamage;
+    public float longArmInterval;
     public GameObject projectilePrefab;
     public ParticleSystem shootEffect;
     Vector2 lookDirection = new Vector2(1,0);
@@ -27,22 +28,39 @@ public class PlayerController : MonoBehaviour
     bool m_ShouldJump;
     bool m_IsGrounded;
     bool m_IsInvincible;
+    bool m_IsHit;
+    bool m_IsCooling;
+    bool m_UsingLongArm;
     float m_InvincibleTimer;
     float m_BlinkingTime;
     float m_BlinkingPhase;
     float m_DeathTimer;
     float m_AttackTimer;
-    bool m_IsHit;
-    bool m_IsCooling;
-    // Use this for initialization
+    float m_LongArmTimer;
+    
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
+        new PlayerSkills();
+        PlayerSkills.instance.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
 
         currentHealth = m_MaxHealth;
-   }
+    }
+
+    void PlayerSkills_OnSkillUnlocked(object sender, PlayerSkills.OnSkillUnlockedEventArgs e)
+    {
+        switch (e.skillType)
+        {
+            case PlayerSkills.SkillType.Propulsors:
+                SetJumpSpeed(1.4f * jumpSpeed);
+                break;
+            
+            case PlayerSkills.SkillType.MagneticAccelerators:
+                SetMoveSpeed(1.4f * moveSpeed);
+                break;
+        }
+    }
     
-    // Update is called once per frame
     void Update () 
     {
         if (m_IsDead)
@@ -64,6 +82,16 @@ public class PlayerController : MonoBehaviour
 
         UpdateTimers();
 
+        if (m_IsHit)
+        {
+            SpriteBlinkingEffect();
+        }
+
+        if (m_UsingLongArm)
+        {
+            return;
+        }
+
         m_PlayerInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         bool isRunning = !Mathf.Approximately(m_PlayerInput.x, 0f);
@@ -77,11 +105,6 @@ public class PlayerController : MonoBehaviour
 
         m_Animator.SetFloat("Look X", lookDirection.x);
 
-        if (m_IsHit)
-        {
-            SpriteBlinkingEffect();
-        }
-
         if(Input.GetKeyDown(KeyCode.Space) && m_IsGrounded)
         {
             m_ShouldJump = true;
@@ -89,7 +112,8 @@ public class PlayerController : MonoBehaviour
 
          else if (Input.GetKeyDown(KeyCode.E))
         {
-            RaycastHit2D hit = Physics2D.Raycast(rigidBody.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("Environment"));
+            RaycastHit2D hit = Physics2D.Raycast(rigidBody.position + Vector2.up * 0.2f, lookDirection, 
+                                    1.5f, LayerMask.GetMask("Environment"));
             if (hit.collider != null)
             {
                 SwitchBehaviour swit = hit.collider.GetComponent<SwitchBehaviour>();
@@ -114,18 +138,27 @@ public class PlayerController : MonoBehaviour
         {
             Shoot();
         }
+
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            UseLongArm();
+        }
     }
 
     void FixedUpdate() 
     {
-        if (m_IsDead)
+        if (m_IsDead || m_UsingLongArm)
         {
             return;
         }
-        
-        if(m_PlayerInput != Vector2.zero) 
+
+        if (m_PlayerInput != Vector2.zero && !m_UsingLongArm) 
         {
             rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y);
+        }
+        else if (m_UsingLongArm)
+        {
+            rigidBody.velocity = Vector2.zero;
         }
         else
         {
@@ -163,7 +196,23 @@ public class PlayerController : MonoBehaviour
                 m_Animator.SetBool("Shoot", false);
                 m_Animator.SetBool("Melee", false);
             }
-            
+        }
+
+        if (m_UsingLongArm)
+        {
+            if (m_IsGrounded)
+            {
+                rigidBody.isKinematic = true;
+                rigidBody.velocity = Vector2.zero;
+            }
+            m_LongArmTimer -= Time.deltaTime;
+
+            if (m_LongArmTimer < 0)
+            {
+                m_UsingLongArm = false;
+                rigidBody.isKinematic = false;
+                m_Animator.SetBool("Long Arm", false);
+            }
         }
     }
 
@@ -181,7 +230,8 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
             m_IsGrounded = false;
-            m_Animator.SetBool("Is Grounded", false);        }
+            m_Animator.SetBool("Is Grounded", false);        
+        }
     }
 
     public void ChangeHealth(float amount)
@@ -288,4 +338,36 @@ public class PlayerController : MonoBehaviour
         projectile.Damage = shootDamage;
         projectile.Launch(direction, 500);
     }
+
+    void UseLongArm()
+    {
+        if (CanUseExtendableArm())
+        {
+            m_UsingLongArm = true;
+            m_Animator.SetBool("Long Arm", true);
+            m_LongArmTimer = longArmInterval;
+            if (m_IsGrounded)
+            {
+                rigidBody.isKinematic = true;
+                rigidBody.velocity = Vector2.zero;
+            }
+        }
+    }
+
+    void SetJumpSpeed(float speed)
+    {
+        jumpSpeed = speed;
+    }
+
+    void SetMoveSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
+    public bool CanUseExtendableArm()
+    {
+        return PlayerSkills.instance.IsSkillUnlocked(PlayerSkills.SkillType.ExtendableArm);
+    }
+
+    
 }

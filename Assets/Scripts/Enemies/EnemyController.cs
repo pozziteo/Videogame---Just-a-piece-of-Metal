@@ -15,9 +15,11 @@ public class EnemyController : MonoBehaviour
     float m_MovedTime;              //elapsed time moving in a direction
     Animator m_Animator;
     Rigidbody2D m_RigidBody;
-    bool m_PlayerInRange;           //player is in range to be attacked
+    [SerializeField] bool m_PlayerInRange;           //player is in range to be attacked
+    [SerializeField] bool m_Caught;              //enemy has been caught by the player's long arm
     bool m_Cooling;                 //cooling down from an attack
     int m_LookDirection = 1;        //direction of movement
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +33,11 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_Caught)
+        {
+            return;
+        }
+
         if (!m_PlayerInRange)
         {
             m_MovedTime -= Time.deltaTime;
@@ -54,6 +61,11 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (m_Caught)
+        {
+            return;
+        }
+
         if (!m_PlayerInRange)
         {
             m_RigidBody.velocity = Vector2.right * moveSpeed * m_LookDirection  + Vector2.up * m_RigidBody.velocity.y;
@@ -86,6 +98,23 @@ public class EnemyController : MonoBehaviour
         m_PlayerInRange = false;
         m_Animator.SetBool("Shoot", false);
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            m_RigidBody.velocity = Vector2.zero;
+            m_RigidBody.isKinematic = true;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            m_RigidBody.isKinematic = false;
+        }
+    } 
 
     void EnemyLogic(PlayerController player)
     {
@@ -130,6 +159,21 @@ public class EnemyController : MonoBehaviour
         if (m_Health == 0)
         {
             gameObject.SetActive(false);
+        }
+    }
+
+    public void SetCaught(bool value)
+    {
+        m_Caught = value;
+    }
+
+    public void FollowArm(BoxCollider2D boxCollider)
+    {
+        if (m_Caught)
+        {
+            Vector2 followPos = boxCollider.ClosestPoint(m_RigidBody.position);
+            Vector2 direction = followPos - (Vector2) gameObject.transform.position;
+            m_RigidBody.transform.Translate(direction * Time.fixedDeltaTime);
         }
     }
 }
