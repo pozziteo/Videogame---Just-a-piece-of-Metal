@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LongArm : MonoBehaviour
 {
-
     [SerializeField] EnemyController m_CaughtEnemy;        //Enemy to which the arm collided when launched
     BoxCollider2D m_BoxCollider;
 

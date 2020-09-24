@@ -66,7 +66,14 @@ public class PlayerController : MonoBehaviour
         if (m_IsDead)
         {
             m_IsInvincible = true;
-            rigidBody.velocity = Vector2.zero;
+            if (rigidBody.velocity.y < 0)
+            {
+                rigidBody.velocity = Vector2.up * rigidBody.velocity;
+            }
+            else 
+            {
+                rigidBody.velocity = Vector2.zero;
+            }
             m_DeathTimer += Time.deltaTime;
             if (m_DeathTimer > timeDead)
             {
@@ -152,17 +159,14 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (m_PlayerInput != Vector2.zero && !m_UsingLongArm) 
+        if (m_PlayerInput != Vector2.zero) 
         {
             rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y);
         }
-        else if (m_UsingLongArm)
-        {
-            rigidBody.velocity = Vector2.zero;
-        }
+
         else
         {
-            rigidBody.velocity = Vector2.up * rigidBody.velocity.y;
+            rigidBody.velocity = Vector2.up * rigidBody.velocity;
         }
      
         if(m_ShouldJump && m_IsGrounded) 
@@ -200,12 +204,12 @@ public class PlayerController : MonoBehaviour
 
         if (m_UsingLongArm)
         {
-            if (m_IsGrounded)
-            {
-                rigidBody.isKinematic = true;
-                rigidBody.velocity = Vector2.zero;
-            }
             m_LongArmTimer -= Time.deltaTime;
+
+            if (!m_IsGrounded)
+            {
+                rigidBody.velocity = Vector2.up * Physics2D.gravity * 0.01f * Time.fixedDeltaTime;
+            }
 
             if (m_LongArmTimer < 0)
             {
@@ -247,7 +251,7 @@ public class PlayerController : MonoBehaviour
             }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, m_MaxHealth);
-        HealthBar.instance.SetValue(currentHealth / (float)m_MaxHealth);
+        HealthBar.instance.SetValue(currentHealth / m_MaxHealth);
         if (currentHealth == 0)
         {
             Die();
@@ -266,7 +270,7 @@ public class PlayerController : MonoBehaviour
         {
             m_IsHit = false;
             m_BlinkingTime = 0.0f;
-            this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;
+            gameObject.GetComponent<SpriteRenderer> ().enabled = true;
             return;
         }
         
@@ -274,13 +278,13 @@ public class PlayerController : MonoBehaviour
         if(m_BlinkingPhase >= blinkingInterval)
         {
             m_BlinkingPhase = 0.0f;
-            if (this.gameObject.GetComponent<SpriteRenderer>().enabled) 
+            if (gameObject.GetComponent<SpriteRenderer>().enabled) 
             {
-                this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                gameObject.GetComponent<SpriteRenderer>().enabled = false;
             } 
             else 
             {
-                this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                gameObject.GetComponent<SpriteRenderer>().enabled = true;
             }
         }
     }
@@ -351,6 +355,7 @@ public class PlayerController : MonoBehaviour
                 rigidBody.isKinematic = true;
                 rigidBody.velocity = Vector2.zero;
             }
+             
         }
     }
 
