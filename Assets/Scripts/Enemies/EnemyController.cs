@@ -10,14 +10,14 @@ public class EnemyController : MonoBehaviour
     public float startHealth;
     public GameObject projectilePrefab;
     public float enemyDamage;
-    float m_Health;
+    [SerializeField] float m_Health;
     float m_ShootTimer;             //countdown to be able to attack again
     float m_MovedTime;              //elapsed time moving in a direction
     Animator m_Animator;
     Rigidbody2D m_RigidBody;
     [SerializeField] bool m_PlayerInRange;           //player is in range to be attacked
     [SerializeField] bool m_Caught;              //enemy has been caught by the player's long arm
-    bool m_Cooling;                 //cooling down from an attack
+    [SerializeField] bool m_Cooling;                 //cooling down from an attack
     int m_LookDirection = 1;        //direction of movement
 
     // Start is called before the first frame update
@@ -167,13 +167,13 @@ public class EnemyController : MonoBehaviour
         m_Caught = value;
     }
 
-    public void FollowArm(BoxCollider2D boxCollider)
+    public void FollowArm(BoxCollider2D boxCollider, float attractionSpeed)
     {
         if (m_Caught)
         {
             Vector2 followPos = boxCollider.ClosestPoint(m_RigidBody.position);
             Vector2 direction = followPos - (Vector2) gameObject.transform.position;
-            m_RigidBody.transform.Translate(direction * Time.fixedDeltaTime);
+            m_RigidBody.transform.Translate(direction * Time.fixedDeltaTime * attractionSpeed);
         }
     }
 }

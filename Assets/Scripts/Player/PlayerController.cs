@@ -5,23 +5,23 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public float moveSpeed = 5f;
-    public float jumpSpeed = 400f;
-    public float fallJumpMultiplier;
-    float m_MaxHealth = 5;
-    public float health {get { return currentHealth; }}
+    public float moveSpeed = 5f;        //Horizontal speed of the player
+    public float jumpSpeed = 400f;      //Vertical speed when player jumps
+    public float fallJumpMultiplier;    //Coefficient of boost to gravity when falling down
+    float m_MaxHealth = 5;              //Max health of the player
+    public float health {get { return currentHealth; }} 
     float currentHealth;
-    public float timeInvincible;
-    public float blinkingHitTime;
-    public float blinkingInterval;
-    public float timeDead;
-    public float attackCooldown;
-    public float shootDamage;
-    public float longArmInterval;
-    public GameObject projectilePrefab;
-    public ParticleSystem shootEffect;
-    Vector2 lookDirection = new Vector2(1,0);
-    Vector2 m_PlayerInput;
+    public float timeInvincible;        //Time interval in which player is invincible after being hit
+    public float blinkingHitTime;       //Blinking animation time after being hit
+    public float blinkingInterval;      //Time interval of a single blinking
+    public float timeDead;              //Time interval in which player remains dead
+    public float attackCooldown;        //Time interval to wait for attacking again
+    public float shootDamage;           //Damage to health from shooting
+    public float longArmInterval;       //Time interval for long arm animation
+    public GameObject projectilePrefab;     //Projectile sprite
+    public ParticleSystem shootEffect;      //Particle system when shooting
+    Vector2 lookDirection = new Vector2(1,0);       //Look direction of the player
+    Vector2 m_PlayerInput;              //Input movement
     Rigidbody2D rigidBody;
     Animator m_Animator;
     bool m_IsDead;
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     bool m_IsHit;
     bool m_IsCooling;
     bool m_UsingLongArm;
+    bool m_Grabbed;
     float m_InvincibleTimer;
     float m_BlinkingTime;
     float m_BlinkingPhase;
@@ -47,6 +48,7 @@ public class PlayerController : MonoBehaviour
         currentHealth = m_MaxHealth;
     }
 
+    //Method called when player unlocks a skill. Change player parameters
     void PlayerSkills_OnSkillUnlocked(object sender, PlayerSkills.OnSkillUnlockedEventArgs e)
     {
         switch (e.skillType)
@@ -63,6 +65,8 @@ public class PlayerController : MonoBehaviour
     
     void Update () 
     {
+        //If player is dead, lock all input controls and stop the player, unless it is falling for gravity. 
+        //When timer elapses, respawn
         if (m_IsDead)
         {
             m_IsInvincible = true;
@@ -87,6 +91,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //Update all timers of the player
         UpdateTimers();
 
         if (m_IsHit)
@@ -94,6 +99,7 @@ public class PlayerController : MonoBehaviour
             SpriteBlinkingEffect();
         }
 
+        //Lock all input and avoid movement if player is using long arm
         if (m_UsingLongArm)
         {
             return;
@@ -154,20 +160,60 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() 
     {
-        if (m_IsDead || m_UsingLongArm)
+        if (m_IsDead)
         {
             return;
         }
 
-        if (m_PlayerInput != Vector2.zero) 
+        /*if (m_BoostVelocity)
+        {
+            //rigidBody.isKinematic = false;      
+        }*/
+
+        if (!m_UsingLongArm) 
         {
             rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y);
+        }
+
+        else 
+        {
+            if (!m_IsGrounded && !m_Grabbed)
+            {
+                //rigidBody.velocity += Vector2.up * Physics2D.gravity * Time.fixedDeltaTime;
+                rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x * 0.2f, rigidBody.velocity.y * 0.2f);
+            }
+            else if (m_IsGrounded && !m_Grabbed)
+            {
+                rigidBody.velocity = Vector2.zero;
+            }
+            else 
+            {
+                rigidBody.velocity = Vector2.right * lookDirection * 7f + Vector2.up * 7f;
+                Debug.Log(rigidBody.velocity);
+            }
+        }
+
+        /*if (m_PlayerInput != Vector2.zero && !m_UsingLongArm) 
+        {
+            rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y);
+        }
+
+        else if (m_UsingLongArm)
+        {
+            if (!m_IsGrounded)
+            {
+                rigidBody.velocity += Vector2.up * Physics2D.gravity * Time.fixedDeltaTime;
+            }
+            else
+            {
+                rigidBody.velocity = Vector2.zero;
+            }
         }
 
         else
         {
             rigidBody.velocity = Vector2.up * rigidBody.velocity;
-        }
+        } */
      
         if(m_ShouldJump && m_IsGrounded) 
         {
@@ -206,15 +252,10 @@ public class PlayerController : MonoBehaviour
         {
             m_LongArmTimer -= Time.deltaTime;
 
-            if (!m_IsGrounded)
-            {
-                rigidBody.velocity = Vector2.up * Physics2D.gravity * 0.01f * Time.fixedDeltaTime;
-            }
-
             if (m_LongArmTimer < 0)
             {
                 m_UsingLongArm = false;
-                rigidBody.isKinematic = false;
+                //rigidBody.isKinematic = false;
                 m_Animator.SetBool("Long Arm", false);
             }
         }
@@ -352,11 +393,21 @@ public class PlayerController : MonoBehaviour
             m_LongArmTimer = longArmInterval;
             if (m_IsGrounded)
             {
-                rigidBody.isKinematic = true;
+                //rigidBody.isKinematic = true;
                 rigidBody.velocity = Vector2.zero;
             }
              
         }
+    }
+
+    public void SetKinematic(bool value)
+    {
+        rigidBody.isKinematic = value;
+    }
+
+    public void SetGrabbed(bool value)
+    {
+        m_Grabbed = value;
     }
 
     void SetJumpSpeed(float speed)
