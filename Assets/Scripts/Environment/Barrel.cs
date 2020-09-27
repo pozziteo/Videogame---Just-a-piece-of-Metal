@@ -58,7 +58,9 @@ public abstract class Barrel : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag == "Projectile")
+        LongArm arm = other.gameObject.GetComponent<LongArm>();
+
+        if (other.gameObject.tag == "Projectile" || arm != null)
         {
             Explode();
         }

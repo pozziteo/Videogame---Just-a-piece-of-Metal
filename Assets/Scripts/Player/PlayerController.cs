@@ -24,14 +24,14 @@ public class PlayerController : MonoBehaviour
     Vector2 m_PlayerInput;              //Input movement
     Rigidbody2D rigidBody;
     Animator m_Animator;
-    bool m_IsDead;
-    bool m_ShouldJump;
-    bool m_IsGrounded;
-    bool m_IsInvincible;
+    [SerializeField] bool m_IsDead;
+    [SerializeField] bool m_ShouldJump;
+    [SerializeField] bool m_IsGrounded;
+    [SerializeField] bool m_IsInvincible;
     bool m_IsHit;
     bool m_IsCooling;
-    bool m_UsingLongArm;
-    bool m_Grabbed;
+    [SerializeField] bool m_UsingLongArm;
+    [SerializeField] bool m_Grabbed;
     float m_InvincibleTimer;
     float m_BlinkingTime;
     float m_BlinkingPhase;
@@ -261,9 +261,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.tag == "Ground")
+        if (!m_IsGrounded && collision.collider.gameObject.tag == "Ground")
         {
             m_IsGrounded = true;
             m_Animator.SetBool("Is Grounded", true);
