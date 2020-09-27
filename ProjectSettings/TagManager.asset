@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Foothold
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Player
   - Enemy
   - PlayerProjectile
-  - 
+  - ObstacleEnvironment
   - 
   - 
   - 

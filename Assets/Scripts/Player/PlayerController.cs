@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+        if (collision.collider.gameObject.tag == "Ground")
         {
             m_IsGrounded = true;
             m_Animator.SetBool("Is Grounded", true);
@@ -272,7 +272,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+        if (collision.collider.gameObject.tag == "Ground")
         {
             m_IsGrounded = false;
             m_Animator.SetBool("Is Grounded", false);        
