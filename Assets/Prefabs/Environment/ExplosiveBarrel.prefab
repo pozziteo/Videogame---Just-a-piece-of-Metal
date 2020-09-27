@@ -141,7 +141,7 @@ MonoBehaviour:
   damage: 3
   explosion: {fileID: 3207159602814841262, guid: 71977e0cfa42bb447905dc08780e0478,
     type: 3}
-  explosionDuration: 4
+  explosionDuration: 2.5
   delayChainExplosion: 0.1
   m_Exploded: 0
   m_ElapsedDuration: 0
