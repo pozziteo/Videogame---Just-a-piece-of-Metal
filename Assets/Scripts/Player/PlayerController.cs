@@ -29,7 +29,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_IsGrounded;
     [SerializeField] bool m_IsInvincible;
     bool m_IsHit;
-    bool m_IsCooling;
+    [SerializeField] bool m_IsCooling;
+    [SerializeField] bool m_Poisoned;
     [SerializeField] bool m_UsingLongArm;
     [SerializeField] bool m_Grabbed;
     float m_InvincibleTimer;
@@ -38,6 +39,9 @@ public class PlayerController : MonoBehaviour
     float m_DeathTimer;
     float m_AttackTimer;
     float m_LongArmTimer;
+    [SerializeField] float m_StatsModifier = 1f;
+    float m_PoisonTotalTime;
+    float m_PoisonedTime;
     
     void Start () {
         rigidBody = GetComponent<Rigidbody2D> ();
@@ -172,7 +176,7 @@ public class PlayerController : MonoBehaviour
 
         if (!m_UsingLongArm) 
         {
-            rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y);
+            rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y) * m_StatsModifier;
         }
 
         else 
@@ -180,7 +184,7 @@ public class PlayerController : MonoBehaviour
             if (!m_IsGrounded && !m_Grabbed)
             {
                 //rigidBody.velocity += Vector2.up * Physics2D.gravity * Time.fixedDeltaTime;
-                rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x * 0.2f, rigidBody.velocity.y * 0.2f);
+                rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x * 0.2f, rigidBody.velocity.y * 0.2f) * m_StatsModifier;
             }
             else if (m_IsGrounded && !m_Grabbed)
             {
@@ -189,7 +193,6 @@ public class PlayerController : MonoBehaviour
             else 
             {
                 rigidBody.velocity = Vector2.right * lookDirection * 7f + Vector2.up * 7f;
-                Debug.Log(rigidBody.velocity);
             }
         }
 
@@ -217,7 +220,7 @@ public class PlayerController : MonoBehaviour
      
         if(m_ShouldJump && m_IsGrounded) 
         {
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpSpeed);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpSpeed) * m_StatsModifier;
             m_Animator.SetTrigger("Jump");
             m_ShouldJump = false;
         }
@@ -232,14 +235,14 @@ public class PlayerController : MonoBehaviour
     {
         if (m_IsInvincible)
         {
-            m_InvincibleTimer -= Time.deltaTime;
+            m_InvincibleTimer -= Time.deltaTime * m_StatsModifier;
             if (m_InvincibleTimer < 0)
                 m_IsInvincible = false;
         }
 
         if (m_IsCooling)
         {
-            m_AttackTimer -= Time.deltaTime;
+            m_AttackTimer -= Time.deltaTime * m_StatsModifier;
             if (m_AttackTimer < 0)
             {
                 m_IsCooling = false;
@@ -248,9 +251,20 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (m_Poisoned)
+        {
+            m_PoisonedTime -= Time.deltaTime;
+            if (m_PoisonedTime < 0)
+            {
+                m_Poisoned = false;
+                m_StatsModifier = 1f;
+                m_PoisonTotalTime = 0f;
+            }
+        }
+
         if (m_UsingLongArm)
         {
-            m_LongArmTimer -= Time.deltaTime;
+            m_LongArmTimer -= Time.deltaTime * m_StatsModifier;
 
             if (m_LongArmTimer < 0)
             {
@@ -398,6 +412,14 @@ public class PlayerController : MonoBehaviour
             }
              
         }
+    }
+
+    public void Poison(float statsModifier, float poisoningTime)
+    {
+        m_Poisoned = true;
+        m_StatsModifier = statsModifier;
+        m_PoisonTotalTime = poisoningTime;
+        m_PoisonedTime = m_PoisonTotalTime;
     }
 
     public void SetKinematic(bool value)

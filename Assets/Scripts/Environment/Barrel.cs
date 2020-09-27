@@ -68,11 +68,14 @@ public abstract class Barrel : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerDamageMelee playerMelee = other.gameObject.GetComponent<PlayerDamageMelee>();
-
-        if (playerMelee != null)
+        if (!m_Exploded)
         {
-            Explode();
+            PlayerDamageMelee playerMelee = other.gameObject.GetComponent<PlayerDamageMelee>();
+
+            if (playerMelee != null)
+            {
+                Explode();
+            }
         }
     }
 
