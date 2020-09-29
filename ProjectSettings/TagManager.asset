@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Foothold
   - Projectile
+  - Melee
   layers:
   - Default
   - TransparentFX

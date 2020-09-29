@@ -36,6 +36,7 @@ public class MeleeEnemy : BaseEnemy
 
         if (!m_PlayerInRange)
         {
+            m_Animator.SetBool("Can Run", false);
             m_Animator.SetBool("Can Walk", true);
             m_RigidBody.velocity = (Vector2.right * moveSpeed * m_LookDirection  + Vector2.up * m_RigidBody.velocity.y) * m_StatsModifier;
         }
@@ -79,7 +80,7 @@ public class MeleeEnemy : BaseEnemy
             m_PlayerInRange = true;
             m_LookDirection = (int) Mathf.Sign(other.gameObject.transform.position.x - transform.position.x);
             m_Animator.SetFloat("Look Direction", m_LookDirection);
-            target = player.transform;
+            target = player.gameObject.transform;
         }
     }
 
@@ -125,7 +126,7 @@ public class MeleeEnemy : BaseEnemy
     {
         if (!m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
         {
-            Vector2 targetPos = target.position;
+            Vector2 targetPos = new Vector2(target.position.x, transform.position.y);
             m_Animator.SetBool("Can Run", true);
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime * m_StatsModifier);
         }

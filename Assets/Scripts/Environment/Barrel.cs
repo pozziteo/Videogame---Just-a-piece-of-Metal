@@ -70,9 +70,7 @@ public abstract class Barrel : MonoBehaviour
     {
         if (!m_Exploded)
         {
-            PlayerDamageMelee playerMelee = other.gameObject.GetComponent<PlayerDamageMelee>();
-
-            if (playerMelee != null)
+            if (other.gameObject.tag == "Melee")
             {
                 Explode();
             }

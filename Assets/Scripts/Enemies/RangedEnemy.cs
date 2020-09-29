@@ -7,6 +7,7 @@ public class RangedEnemy : BaseEnemy
     public float shootCooldown;     //waiting time until next attack
     public GameObject projectilePrefab;
     [SerializeField] float m_ShootTimer;             //countdown to be able to attack again
+    Transform target;
 
     // Update is called once per frame
     void Update()
@@ -17,6 +18,11 @@ public class RangedEnemy : BaseEnemy
         }
 
         UpdateTimers();
+
+        if (m_PlayerInRange)
+        {
+            EnemyLogic();
+        }
     }
 
     protected override void UpdateTimers()
@@ -43,7 +49,7 @@ public class RangedEnemy : BaseEnemy
             m_PlayerInRange = true;
             m_LookDirection = (int) Mathf.Sign(other.gameObject.transform.position.x - transform.position.x);
             m_Animator.SetFloat("Look Direction", m_LookDirection);
-            EnemyLogic(player);
+            target = player.gameObject.transform;
         }
     }
 
@@ -53,7 +59,7 @@ public class RangedEnemy : BaseEnemy
         m_Animator.SetBool("Shoot", false);
     }
 
-    void EnemyLogic(PlayerController player)
+    void EnemyLogic()
     {
         if (m_Cooling)
         {
@@ -61,16 +67,16 @@ public class RangedEnemy : BaseEnemy
         }
         else
         {
-            Shoot(player);
+            Shoot();
         }
     }
 
-    void Shoot(PlayerController player)
+    void Shoot()
     {
         m_Cooling = true;
         m_ShootTimer = shootCooldown;
         m_Animator.SetBool("Shoot", true);
-        Vector2 playerPos = player.gameObject.transform.position;
+        Vector2 playerPos = target.position;
         Vector2 enemyPos = m_RigidBody.transform.position;
         Vector2 direction = playerPos - enemyPos;
         direction.Normalize();

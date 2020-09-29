@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 2549093961522571006}
   m_Layer: 10
   m_Name: HitBoxMelee
-  m_TagString: Untagged
+  m_TagString: Melee
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -312,6 +312,15 @@ MonoBehaviour:
     type: 3}
   shootEffect: {fileID: 3831466366518806463, guid: 8dfa05b9bbb02a04a9dd29ef64c189c3,
     type: 3}
+  m_IsDead: 0
+  m_ShouldJump: 0
+  m_IsGrounded: 0
+  m_IsInvincible: 0
+  m_IsCooling: 0
+  m_Poisoned: 0
+  m_UsingLongArm: 0
+  m_Grabbed: 0
+  m_StatsModifier: 1
 --- !u!50 &7964346903777221281
 Rigidbody2D:
   serializedVersion: 4

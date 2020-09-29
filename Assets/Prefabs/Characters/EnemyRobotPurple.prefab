@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 468085331682286963}
   m_Layer: 11
   m_Name: RobotArmRight
-  m_TagString: Untagged
+  m_TagString: Melee
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 5226077912062020837}
   m_Layer: 11
   m_Name: RobotArmLeft
-  m_TagString: Untagged
+  m_TagString: Melee
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -318,12 +318,11 @@ MonoBehaviour:
   m_Poisoned: 0
   m_PlayerInRange: 0
   m_Caught: 0
-  m_Cooling: 1
+  m_Cooling: 0
   m_LookDirection: 1
-  runSpeed: 4
+  runSpeed: 3.5
   attackDistance: 3
   meleeCooldown: 3.5
-  rayCastLength: 0
   m_MeleeTimer: 0
 --- !u!1 &4636872565365995951
 GameObject:
