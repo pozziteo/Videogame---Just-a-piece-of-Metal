@@ -23,7 +23,7 @@ public class ExplosiveBarrel : Barrel
     void OnTriggerStay2D(Collider2D other)
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
-        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = other.gameObject.GetComponent<BaseEnemy>();
         
         if (player != null)
         {

@@ -8,7 +8,7 @@ public class PlayerDamageMelee : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = other.gameObject.GetComponent<BaseEnemy>();
 
         if (enemy != null)
         {

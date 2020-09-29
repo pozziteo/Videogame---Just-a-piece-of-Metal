@@ -15,7 +15,7 @@ public class Damager : MonoBehaviour
             player.ChangeHealth(-damage);
         }
 
-        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = other.gameObject.GetComponent<BaseEnemy>();
 
         if (enemy != null)
         {
@@ -32,7 +32,7 @@ public class Damager : MonoBehaviour
             player.ChangeHealth(-damage);
         }
         
-        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = other.gameObject.GetComponent<BaseEnemy>();
 
         if (enemy != null)
         {

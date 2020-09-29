@@ -6,7 +6,7 @@ public class LongArm : MonoBehaviour
 {
     public float attractionSpeed = 8.0f;
     PlayerController m_Player;
-    [SerializeField] EnemyController m_CaughtEnemy;        //Enemy to which the arm collided when launched
+    [SerializeField] BaseEnemy m_CaughtEnemy;        //Enemy to which the arm collided when launched
     BoxCollider2D m_BoxCollider;
 
     void Awake()
@@ -29,7 +29,7 @@ public class LongArm : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = collision.gameObject.GetComponent<BaseEnemy>();
 
         if (enemy != null)
         {

@@ -39,7 +39,7 @@ public class PlayerProjectile : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = other.gameObject.GetComponent<BaseEnemy>();
         if (enemy != null)
         {
             enemy.ChangeHealth(-m_Damage);

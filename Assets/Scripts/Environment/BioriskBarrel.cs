@@ -27,7 +27,7 @@ public class BioriskBarrel : Barrel
         base.OnTriggerEnter2D(other);
 
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
-        EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+        BaseEnemy enemy = other.gameObject.GetComponent<BaseEnemy>();
         
         if (player != null)
         {
