@@ -4,17 +4,43 @@ using UnityEngine;
 
 public class SwitchBehaviour : MonoBehaviour
 {
+    static List<string> SwitchIDs;
     public GameObject messageBox;
     public GameObject activatedSwitch;
     public DoorBehaviour linkedDoor;
     public float messageTime;
+    public string switchID;
     float m_ElapsedTime;
-    bool m_IsActivated;
+    [SerializeField] bool m_IsActivated;
+
+    void Awake()
+    {
+        if (SwitchIDs == null)
+        {
+            SwitchIDs = new List<string>();
+        }
+
+        if (!SwitchIDs.Contains(switchID))
+        {
+            SwitchIDs.Add(switchID);
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         messageBox.SetActive(false);
         activatedSwitch.SetActive(false);
+    }
+
+    public bool IsActivated()
+    {
+        return m_IsActivated;
     }
 
     // Update is called once per frame

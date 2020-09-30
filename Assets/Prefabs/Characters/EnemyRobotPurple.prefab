@@ -312,6 +312,8 @@ MonoBehaviour:
   moveTimer: 3
   startHealth: 3
   enemyDamage: 1
+  hurtEffect: {fileID: 4723599629877341064, guid: 7a6ce3a6cee59fc4e904df13e6c67598,
+    type: 3}
   m_Health: 0
   m_MovedTime: 0
   m_StatsModifier: 0

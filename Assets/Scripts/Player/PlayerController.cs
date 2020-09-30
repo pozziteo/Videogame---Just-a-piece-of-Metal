@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    public static PlayerController Player;
     public float moveSpeed = 5f;        //Horizontal speed of the player
     public float jumpSpeed = 400f;      //Vertical speed when player jumps
     public float fallJumpMultiplier;    //Coefficient of boost to gravity when falling down
-    float m_MaxHealth = 5;              //Max health of the player
+    public float m_MaxHealth = 5;              //Max health of the player
     public float health {get { return currentHealth; }} 
     float currentHealth;
     public float timeInvincible;        //Time interval in which player is invincible after being hit
@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     Vector2 m_PlayerInput;              //Input movement
     Rigidbody2D rigidBody;
     Animator m_Animator;
+    [SerializeField] GameObject m_ActualCheckpoint;
     [SerializeField] bool m_IsDead;
     [SerializeField] bool m_ShouldJump;
     [SerializeField] bool m_IsGrounded;
@@ -43,7 +44,21 @@ public class PlayerController : MonoBehaviour
     float m_PoisonTotalTime;
     float m_PoisonedTime;
     
-    void Start () {
+    void Awake()
+    {
+        if (Player == null)
+        {
+            Player = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void Start () 
+    {
         rigidBody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
         new PlayerSkills();
@@ -88,6 +103,9 @@ public class PlayerController : MonoBehaviour
                 m_IsDead = false;
                 m_IsInvincible = false;
                 m_DeathTimer = 0f;
+                currentHealth = m_MaxHealth;
+                HealthBar.instance.SetValue(1f);
+                MoveToSpawnpoint(m_ActualCheckpoint);
             }
             else 
             {
@@ -134,14 +152,21 @@ public class PlayerController : MonoBehaviour
             if (hit.collider != null)
             {
                 SwitchBehaviour swit = hit.collider.GetComponent<SwitchBehaviour>();
-                if (swit != null)
+                if (swit != null && !swit.IsActivated()) 
                 {
                     swit.ActivateSwitch();
                 }
                 DoorBehaviour door = hit.collider.GetComponent<DoorBehaviour>();
                 if (door != null)
                 {
-                    door.OpenDoor();
+                    if (!door.IsOpen())
+                    {
+                        door.OpenDoor();
+                    }
+                    else
+                    {
+                        door.ChangeLevel();
+                    }
                 }
             }
         }
@@ -195,28 +220,6 @@ public class PlayerController : MonoBehaviour
                 rigidBody.velocity = Vector2.right * lookDirection * 7f + Vector2.up * 7f;
             }
         }
-
-        /*if (m_PlayerInput != Vector2.zero && !m_UsingLongArm) 
-        {
-            rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y);
-        }
-
-        else if (m_UsingLongArm)
-        {
-            if (!m_IsGrounded)
-            {
-                rigidBody.velocity += Vector2.up * Physics2D.gravity * Time.fixedDeltaTime;
-            }
-            else
-            {
-                rigidBody.velocity = Vector2.zero;
-            }
-        }
-
-        else
-        {
-            rigidBody.velocity = Vector2.up * rigidBody.velocity;
-        } */
      
         if(m_ShouldJump && m_IsGrounded) 
         {
@@ -269,10 +272,19 @@ public class PlayerController : MonoBehaviour
             if (m_LongArmTimer < 0)
             {
                 m_UsingLongArm = false;
-                //rigidBody.isKinematic = false;
                 m_Animator.SetBool("Long Arm", false);
             }
         }
+    }
+
+    public static void MoveToSpawnpoint(GameObject spawnPoint)
+    {
+        Player.gameObject.transform.position = spawnPoint.transform.position;
+    }
+
+    public void SetCurrentCheckpoint(GameObject newSpawnPoint)
+    {
+        m_ActualCheckpoint = newSpawnPoint;
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -348,8 +360,6 @@ public class PlayerController : MonoBehaviour
     {
         m_IsDead = true;
         m_Animator.SetTrigger("Die");
-        currentHealth = m_MaxHealth;
-        HealthBar.instance.SetValue(1f);
     }
 
     void Melee()

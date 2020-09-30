@@ -1,22 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DoorBehaviour : MonoBehaviour
 {
     public GameObject lockedDoor;
     public GameObject unlockedDoor;
     public GameObject openDoor;
-    public GameObject messageBox;
+    public GameObject unlockedDoorMessage;
+    public GameObject openDoorMessage;
+    public string connectedScene;
     public float messageTime;
+    public string doorID;
+    public string connectedDoor;
+    DoorsManager m_DoorsManager;
     float m_ElapsedTime;
     bool m_IsUnlocked;
     bool m_IsOpen;
+
+    public bool IsUnlocked()
+    {
+        return m_IsUnlocked;
+    }
+
+    public bool IsOpen()
+    {
+        return m_IsOpen;
+    }
     
     void Awake()
     {
-        unlockedDoor.SetActive(false);
-        openDoor.SetActive(false);
+        m_DoorsManager = DoorsManager.GetInstance();
+
+        if (m_DoorsManager.FindDoor(doorID) == null)
+        {
+            m_DoorsManager.AddDoor(this);
+            DontDestroyOnLoad(this);
+            unlockedDoor.SetActive(false);
+            openDoor.SetActive(false);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Update()
@@ -26,7 +53,8 @@ public class DoorBehaviour : MonoBehaviour
             m_ElapsedTime -= Time.deltaTime;
             if (m_ElapsedTime < 0)
             {
-                messageBox.SetActive(false);
+                unlockedDoorMessage.SetActive(false);
+                openDoorMessage.SetActive(false);
             }
         }
     }
@@ -40,7 +68,7 @@ public class DoorBehaviour : MonoBehaviour
 
     public void OpenDoor()
     {
-        if (m_IsOpen)
+        if (!m_IsUnlocked || m_IsOpen)
         {
             return;
         }
@@ -50,13 +78,13 @@ public class DoorBehaviour : MonoBehaviour
         unlockedDoor.SetActive(false);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         if (m_IsUnlocked)
         {
             PlayerController player = other.gameObject.GetComponent<PlayerController>();
 
-            if (player != null && !m_IsOpen)
+            if (player != null)
             {
                 DisplayMessage();
             }
@@ -66,6 +94,30 @@ public class DoorBehaviour : MonoBehaviour
     void DisplayMessage()
     {
         m_ElapsedTime = messageTime;
-        messageBox.SetActive(true);
+
+        if (!m_IsOpen)
+        {
+            unlockedDoorMessage.SetActive(true);
+        }
+        else
+        {
+            openDoorMessage.SetActive(true);
+        }
+    }
+
+    public void ChangeLevel()
+    {
+        SceneManager.LoadScene(connectedScene, LoadSceneMode.Single);
+        SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, SceneManager.GetSceneByName(connectedScene));
+        SceneManager.sceneLoaded += OnSceneLoaded;  
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        //SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, scene);
+        DoorBehaviour otherDoor = m_DoorsManager.FindDoor(connectedDoor);
+        PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
+        PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

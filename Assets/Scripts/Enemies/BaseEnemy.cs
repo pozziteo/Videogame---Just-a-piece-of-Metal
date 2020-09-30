@@ -9,6 +9,7 @@ public abstract class BaseEnemy : MonoBehaviour
     public float moveTimer;         //timer of moving in the same direction
     public float startHealth;
     public float enemyDamage;
+    public ParticleSystem hurtEffect;
     [SerializeField] float m_Health;
     [SerializeField] protected float m_MovedTime;              //elapsed time moving in a direction
     protected float m_PoisonedTime;
@@ -92,6 +93,7 @@ public abstract class BaseEnemy : MonoBehaviour
     public void ChangeHealth(float amount)
     {
         m_Health = Mathf.Clamp(m_Health + amount, 0, startHealth);
+        Instantiate(hurtEffect, transform.position, Quaternion.identity);
         if (m_Health == 0)
         {
             gameObject.SetActive(false);

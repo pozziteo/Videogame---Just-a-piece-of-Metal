@@ -164,15 +164,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f94c7a14edf15429fa0cbe35ccfa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootCooldown: 2
   moveSpeed: 2
   moveTimer: 2
   startHealth: 2
-  projectilePrefab: {fileID: 1222207492220009179, guid: 56a213ffd1b5f8f489823340aac7f234,
-    type: 3}
   enemyDamage: 0.5
+  hurtEffect: {fileID: 4723599629877341064, guid: 24532092c38379e498130d821749c30d,
+    type: 3}
+  m_Health: 0
+  m_MovedTime: 0
+  m_StatsModifier: 0
+  m_Poisoned: 0
   m_PlayerInRange: 0
   m_Caught: 0
+  m_Cooling: 0
+  m_LookDirection: 1
+  shootCooldown: 2
+  projectilePrefab: {fileID: 1222207492220009179, guid: 56a213ffd1b5f8f489823340aac7f234,
+    type: 3}
+  m_ShootTimer: 0
 --- !u!1 &6731382696257422663
 GameObject:
   m_ObjectHideFlags: 0
