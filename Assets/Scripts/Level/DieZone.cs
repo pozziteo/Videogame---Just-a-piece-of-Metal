@@ -8,7 +8,7 @@ public class DieZone : MonoBehaviour
     {
         if (other.gameObject == PlayerController.Player.gameObject)
         {
-            PlayerController.Player.ChangeHealth(-PlayerController.Player.m_MaxHealth);
+            PlayerController.Player.ChangeHealth(-PlayerController.MaxHealth);
         }
         else 
         {

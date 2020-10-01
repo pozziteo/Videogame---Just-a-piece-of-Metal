@@ -209,7 +209,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6802547014218669038}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.68, y: -0.19, z: 0}
   m_LocalScale: {x: 0.47308913, y: 0.47308913, z: 0.47308913}
   m_Children:
   - {fileID: 1614926189702760622}
@@ -298,8 +298,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef8c1a3901c48b44892fca730192b14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpSpeed: 9
   fallJumpMultiplier: 0.75
   timeInvincible: 2
   blinkingHitTime: 2
@@ -312,6 +310,9 @@ MonoBehaviour:
     type: 3}
   shootEffect: {fileID: 3831466366518806463, guid: 8dfa05b9bbb02a04a9dd29ef64c189c3,
     type: 3}
+  jetpackEffect: {fileID: 2818404131867619540, guid: 4b42db8e084dc524fab74250e7638a86,
+    type: 3}
+  m_ActualCheckpoint: {fileID: 0}
   m_IsDead: 0
   m_ShouldJump: 0
   m_IsGrounded: 0
@@ -320,6 +321,7 @@ MonoBehaviour:
   m_Poisoned: 0
   m_UsingLongArm: 0
   m_Grabbed: 0
+  m_UsingJetpack: 0
   m_StatsModifier: 1
 --- !u!50 &7964346903777221281
 Rigidbody2D:

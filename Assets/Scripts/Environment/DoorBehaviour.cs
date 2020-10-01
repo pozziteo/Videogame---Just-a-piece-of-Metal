@@ -114,7 +114,6 @@ public class DoorBehaviour : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        //SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, scene);
         DoorBehaviour otherDoor = m_DoorsManager.FindDoor(connectedDoor);
         PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
         PlayerController.MoveToSpawnpoint(otherDoor.gameObject);

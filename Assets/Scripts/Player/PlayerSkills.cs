@@ -12,21 +12,31 @@ public class PlayerSkills
     }
 
     public static PlayerSkills instance;
+    public static float m_PropulsorsNewSpeed = 13f;
+    public static float m_AcceleratorsNewSpeed = 7f;
+    public static float m_JetpackBoostVelocity = 15f;
+    public static float m_StandardMaxJetpackFuel = 4f;
 
     public enum SkillType {
         Propulsors,
         MagneticAccelerators,
-        ExtendableArm
+        ExtendableArm,
+        Jetpack
     }
 
     List<SkillType> m_UnlockedSkillsList;
 
-    public PlayerSkills()
+    PlayerSkills()
+    {
+        m_UnlockedSkillsList = new List<SkillType>();
+        instance = this;
+    }
+
+    public static void GetSkills()
     {
         if (instance == null)
         {
-            m_UnlockedSkillsList = new List<SkillType>();
-            instance = this;
+            new PlayerSkills();
         }
     }
 

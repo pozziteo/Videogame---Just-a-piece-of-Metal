@@ -5,11 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Player;
-    public float moveSpeed = 5f;        //Horizontal speed of the player
-    public float jumpSpeed = 400f;      //Vertical speed when player jumps
+    public static float MoveSpeed = 5f;        //Horizontal speed of the player
+    public static float JumpSpeed = 9f;      //Vertical speed when player jumps
+    public static float MaxHealth = 5f;              //Max health of the player
     public float fallJumpMultiplier;    //Coefficient of boost to gravity when falling down
-    public float m_MaxHealth = 5;              //Max health of the player
-    public float health {get { return currentHealth; }} 
+    public float Health {get { return currentHealth; }} 
     float currentHealth;
     public float timeInvincible;        //Time interval in which player is invincible after being hit
     public float blinkingHitTime;       //Blinking animation time after being hit
@@ -20,11 +20,13 @@ public class PlayerController : MonoBehaviour
     public float longArmInterval;       //Time interval for long arm animation
     public GameObject projectilePrefab;     //Projectile sprite
     public ParticleSystem shootEffect;      //Particle system when shooting
+    public ParticleSystem jetpackEffect;    //Particle system when using jetpack
     Vector2 lookDirection = new Vector2(1,0);       //Look direction of the player
     Vector2 m_PlayerInput;              //Input movement
     Rigidbody2D rigidBody;
     Animator m_Animator;
     [SerializeField] GameObject m_ActualCheckpoint;
+    ParticleSystem m_ParticleJetpack;
     [SerializeField] bool m_IsDead;
     [SerializeField] bool m_ShouldJump;
     [SerializeField] bool m_IsGrounded;
@@ -34,12 +36,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_Poisoned;
     [SerializeField] bool m_UsingLongArm;
     [SerializeField] bool m_Grabbed;
+    [SerializeField] bool m_UsingJetpack;
     float m_InvincibleTimer;
     float m_BlinkingTime;
     float m_BlinkingPhase;
     float m_DeathTimer;
     float m_AttackTimer;
     float m_LongArmTimer;
+    float m_MaxJetpackFuel;
+    float m_CurrentJetpackFuel;
+    float m_JetpackBoostVelocity;
     [SerializeField] float m_StatsModifier = 1f;
     float m_PoisonTotalTime;
     float m_PoisonedTime;
@@ -61,10 +67,10 @@ public class PlayerController : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
-        new PlayerSkills();
+        PlayerSkills.GetSkills();
         PlayerSkills.instance.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
 
-        currentHealth = m_MaxHealth;
+        currentHealth = MaxHealth;
     }
 
     //Method called when player unlocks a skill. Change player parameters
@@ -73,13 +79,17 @@ public class PlayerController : MonoBehaviour
         switch (e.skillType)
         {
             case PlayerSkills.SkillType.Propulsors:
-                SetJumpSpeed(1.4f * jumpSpeed);
+                SetJumpSpeed(PlayerSkills.m_PropulsorsNewSpeed);
                 break;
             
             case PlayerSkills.SkillType.MagneticAccelerators:
-                SetMoveSpeed(1.4f * moveSpeed);
+                SetMoveSpeed(PlayerSkills.m_AcceleratorsNewSpeed);
                 break;
-        }
+            
+            case PlayerSkills.SkillType.Jetpack:
+                SetJetpackParams(PlayerSkills.m_StandardMaxJetpackFuel, PlayerSkills.m_JetpackBoostVelocity);
+                break;
+        }   
     }
     
     void Update () 
@@ -103,7 +113,7 @@ public class PlayerController : MonoBehaviour
                 m_IsDead = false;
                 m_IsInvincible = false;
                 m_DeathTimer = 0f;
-                currentHealth = m_MaxHealth;
+                currentHealth = MaxHealth;
                 HealthBar.instance.SetValue(1f);
                 MoveToSpawnpoint(m_ActualCheckpoint);
             }
@@ -185,6 +195,17 @@ public class PlayerController : MonoBehaviour
         {
             UseLongArm();
         }
+
+        if (Input.GetKey(KeyCode.Space) && !m_IsGrounded)
+        {
+            UseJetpack();
+        }
+
+        if (m_UsingJetpack && Input.GetKeyUp(KeyCode.Space))
+        {
+            TurnOffJetpack();
+        }
+            
     }
 
     void FixedUpdate() 
@@ -194,41 +215,49 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        /*if (m_BoostVelocity)
-        {
-            //rigidBody.isKinematic = false;      
-        }*/
-
         if (!m_UsingLongArm) 
         {
-            rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x, rigidBody.velocity.y) * m_StatsModifier;
+            rigidBody.velocity = new Vector2(MoveSpeed * m_PlayerInput.x, rigidBody.velocity.y) * m_StatsModifier;
         }
 
         else 
         {
             if (!m_IsGrounded && !m_Grabbed)
             {
-                //rigidBody.velocity += Vector2.up * Physics2D.gravity * Time.fixedDeltaTime;
-                rigidBody.velocity = new Vector2(moveSpeed * m_PlayerInput.x * 0.2f, rigidBody.velocity.y * 0.2f) * m_StatsModifier;
+                rigidBody.velocity = new Vector2(MoveSpeed * m_PlayerInput.x * 0.2f, rigidBody.velocity.y * 0.2f) * m_StatsModifier;
             }
+
             else if (m_IsGrounded && !m_Grabbed)
             {
                 rigidBody.velocity = Vector2.zero;
             }
+
             else 
             {
                 rigidBody.velocity = Vector2.right * lookDirection * 7f + Vector2.up * 7f;
             }
         }
      
-        if(m_ShouldJump && m_IsGrounded) 
+        if (m_ShouldJump && m_IsGrounded) 
         {
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpSpeed) * m_StatsModifier;
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, JumpSpeed) * m_StatsModifier;
             m_Animator.SetTrigger("Jump");
             m_ShouldJump = false;
         }
 
-        if (rigidBody.velocity.y < 0)
+        if (m_UsingJetpack)
+        {
+            if (rigidBody.velocity.y < 0)
+            {
+                rigidBody.velocity += 2.5f * Vector2.up * Time.fixedDeltaTime * m_JetpackBoostVelocity;
+            }
+            else
+            {
+                rigidBody.velocity += Vector2.up * Time.fixedDeltaTime * m_JetpackBoostVelocity;               
+            }
+        }
+
+        else if (rigidBody.velocity.y < 0)
         {
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * fallJumpMultiplier * Time.fixedDeltaTime;
         }
@@ -275,6 +304,31 @@ public class PlayerController : MonoBehaviour
                 m_Animator.SetBool("Long Arm", false);
             }
         }
+
+        if (m_UsingJetpack)
+        {
+            m_CurrentJetpackFuel -= Time.deltaTime;
+            
+            if (m_CurrentJetpackFuel < 0)
+            {
+                m_UsingJetpack = false;
+                m_Animator.SetBool("Jetpack", false);
+                TurnOffJetpack();
+            }
+            Debug.Log("Current fuel: " + m_CurrentJetpackFuel);
+
+        }
+
+        else if (m_IsGrounded && m_CurrentJetpackFuel < m_MaxJetpackFuel)
+        {
+            m_CurrentJetpackFuel += Time.deltaTime;
+
+            if (m_CurrentJetpackFuel > m_MaxJetpackFuel)
+            {
+                m_CurrentJetpackFuel = m_MaxJetpackFuel;
+            }
+            Debug.Log("Current fuel: " + m_CurrentJetpackFuel);
+        }
     }
 
     public static void MoveToSpawnpoint(GameObject spawnPoint)
@@ -317,8 +371,8 @@ public class PlayerController : MonoBehaviour
                 m_IsHit = true;
             }
 
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, m_MaxHealth);
-        HealthBar.instance.SetValue(currentHealth / m_MaxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, MaxHealth);
+        HealthBar.instance.SetValue(currentHealth / MaxHealth);
         if (currentHealth == 0)
         {
             Die();
@@ -360,6 +414,7 @@ public class PlayerController : MonoBehaviour
     {
         m_IsDead = true;
         m_Animator.SetTrigger("Die");
+        TurnOffJetpack();
     }
 
     void Melee()
@@ -424,6 +479,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void UseJetpack()
+    {
+        if (CanUseJetpack() && IsJetpackReady() && !m_UsingJetpack)
+        {
+            m_UsingJetpack = true;
+            m_Animator.SetBool("Jetpack", true);
+            m_ParticleJetpack = Instantiate(jetpackEffect, transform.position + Vector3.down * 1.75f, Quaternion.identity);
+            m_ParticleJetpack.transform.parent = gameObject.transform;
+        }
+    }
+
+    void TurnOffJetpack()
+    {
+        m_UsingJetpack = false;
+        m_Animator.SetBool("Jetpack", false);
+        
+        if (m_ParticleJetpack != null)
+        {
+            Destroy(m_ParticleJetpack.gameObject);
+        }
+    }
+
+    bool IsJetpackReady()
+    {
+        return m_CurrentJetpackFuel > 0;
+    }
+
     public void Poison(float statsModifier, float poisoningTime)
     {
         m_Poisoned = true;
@@ -444,18 +526,29 @@ public class PlayerController : MonoBehaviour
 
     void SetJumpSpeed(float speed)
     {
-        jumpSpeed = speed;
+        JumpSpeed = speed;
     }
 
     void SetMoveSpeed(float speed)
     {
-        moveSpeed = speed;
+        MoveSpeed = speed;
     }
 
-    public bool CanUseExtendableArm()
+    void SetJetpackParams(float fuel, float jetpackBoost)
+    {
+        m_MaxJetpackFuel = fuel;
+        m_CurrentJetpackFuel = m_MaxJetpackFuel;
+        m_JetpackBoostVelocity = jetpackBoost;
+    }
+
+    bool CanUseExtendableArm()
     {
         return PlayerSkills.instance.IsSkillUnlocked(PlayerSkills.SkillType.ExtendableArm);
     }
 
+    bool CanUseJetpack()
+    {
+        return PlayerSkills.instance.IsSkillUnlocked(PlayerSkills.SkillType.Jetpack);
+    }
     
 }
