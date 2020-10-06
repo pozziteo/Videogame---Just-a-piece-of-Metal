@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2252765208057229397}
   - component: {fileID: 2454507568454529577}
   - component: {fileID: 7833729549921340250}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EnemyRobotGold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,7 +168,8 @@ MonoBehaviour:
   moveTimer: 2
   startHealth: 3
   enemyDamage: 2
-  hurtEffect: {fileID: 0}
+  hurtEffect: {fileID: 4723599629877341064, guid: 7a6ce3a6cee59fc4e904df13e6c67598,
+    type: 3}
   m_Health: 0
   m_MovedTime: 0
   m_StatsModifier: 0
@@ -177,10 +178,10 @@ MonoBehaviour:
   m_Caught: 0
   m_Cooling: 0
   m_LookDirection: 1
-  shootCooldown: 2
-  projectilePrefab: {fileID: 1222207492220009179, guid: 56a213ffd1b5f8f489823340aac7f234,
+  shootCooldown: 3
+  projectilePrefab: {fileID: 5482053514898117472, guid: cfd3af3a9cbd7834bbd2a1a6d21ae162,
     type: 3}
-  projectileForce: 700
+  projectileForce: 70
   m_ShootTimer: 0
 --- !u!1 &8773495106685297429
 GameObject:
@@ -192,7 +193,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2770865675924380630}
   - component: {fileID: 7244304859412195840}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PlayerDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,4 +229,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 10.59
+  m_Radius: 16.34

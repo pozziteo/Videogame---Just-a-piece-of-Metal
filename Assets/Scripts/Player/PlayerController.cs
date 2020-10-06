@@ -8,23 +8,25 @@ public class PlayerController : MonoBehaviour
     public static float MoveSpeed = 5f;        //Horizontal speed of the player
     public static float JumpSpeed = 9f;      //Vertical speed when player jumps
     public static float MaxHealth = 5f;              //Max health of the player
+    public static float shootDamage = 1f;           //Damage to health from shooting
+    public static float m_MaxJetpackFuel = 0f;
+    public float projectileForce;
     public float fallJumpMultiplier;    //Coefficient of boost to gravity when falling down
-    public float Health {get { return currentHealth; }} 
-    float currentHealth;
     public float timeInvincible;        //Time interval in which player is invincible after being hit
     public float blinkingHitTime;       //Blinking animation time after being hit
     public float blinkingInterval;      //Time interval of a single blinking
     public float timeDead;              //Time interval in which player remains dead
     public float attackCooldown;        //Time interval to wait for attacking again
-    public float shootDamage;           //Damage to health from shooting
     public float longArmInterval;       //Time interval for long arm animation
-    public GameObject projectilePrefab;     //Projectile sprite
+    public GameObject usedProjectilePrefab;     //Currently used projectile sprite 
+    public GameObject nuclearGunProjectile;     //Projectile prefab of the skill NuclearGun
     public ParticleSystem shootEffect;      //Particle system when shooting
     public ParticleSystem jetpackEffect;    //Particle system when using jetpack
     Vector2 lookDirection = new Vector2(1,0);       //Look direction of the player
     Vector2 m_PlayerInput;              //Input movement
     Rigidbody2D rigidBody;
     Animator m_Animator;
+    PlayerSkills m_PlayerSkills;
     [SerializeField] GameObject m_ActualCheckpoint;
     ParticleSystem m_ParticleJetpack;
     [SerializeField] bool m_IsDead;
@@ -37,15 +39,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_UsingLongArm;
     [SerializeField] bool m_Grabbed;
     [SerializeField] bool m_UsingJetpack;
+    static float m_CurrentHealth = MaxHealth;
     float m_InvincibleTimer;
     float m_BlinkingTime;
     float m_BlinkingPhase;
     float m_DeathTimer;
     float m_AttackTimer;
     float m_LongArmTimer;
-    float m_MaxJetpackFuel;
-    float m_CurrentJetpackFuel;
-    float m_JetpackBoostVelocity;
+    static float m_CurrentJetpackFuel;
+    static float m_JetpackBoostVelocity;
     [SerializeField] float m_StatsModifier = 1f;
     float m_PoisonTotalTime;
     float m_PoisonedTime;
@@ -55,7 +57,9 @@ public class PlayerController : MonoBehaviour
         if (Player == null)
         {
             Player = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this);
+            m_PlayerSkills = PlayerSkills.GetSkills();
+            m_PlayerSkills.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
         }
         else
         {
@@ -67,10 +71,6 @@ public class PlayerController : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
-        PlayerSkills.GetSkills();
-        PlayerSkills.instance.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
-
-        currentHealth = MaxHealth;
     }
 
     //Method called when player unlocks a skill. Change player parameters
@@ -79,15 +79,23 @@ public class PlayerController : MonoBehaviour
         switch (e.skillType)
         {
             case PlayerSkills.SkillType.Propulsors:
-                SetJumpSpeed(PlayerSkills.m_PropulsorsNewSpeed);
+                SetJumpSpeed(m_PlayerSkills.propulsorsNewSpeed);
                 break;
             
             case PlayerSkills.SkillType.MagneticAccelerators:
-                SetMoveSpeed(PlayerSkills.m_AcceleratorsNewSpeed);
+                SetMoveSpeed(m_PlayerSkills.acceleratorsNewSpeed);
                 break;
             
             case PlayerSkills.SkillType.Jetpack:
-                SetJetpackParams(PlayerSkills.m_StandardMaxJetpackFuel, PlayerSkills.m_JetpackBoostVelocity);
+                SetJetpackParams(m_PlayerSkills.standardMaxJetpackFuel, m_PlayerSkills.jetpackBoostVelocity);
+                break;
+
+            case PlayerSkills.SkillType.NuclearGun:
+                SetNuclearGun(m_PlayerSkills.nuclearGunDamage);
+                break;
+
+            case PlayerSkills.SkillType.IronSkin:
+                SetIronSkin(m_PlayerSkills.ironSkinModifier);
                 break;
         }   
     }
@@ -113,7 +121,7 @@ public class PlayerController : MonoBehaviour
                 m_IsDead = false;
                 m_IsInvincible = false;
                 m_DeathTimer = 0f;
-                currentHealth = MaxHealth;
+                m_CurrentHealth = MaxHealth;
                 HealthBar.instance.SetValue(1f);
                 MoveToSpawnpoint(m_ActualCheckpoint);
             }
@@ -315,7 +323,6 @@ public class PlayerController : MonoBehaviour
                 m_Animator.SetBool("Jetpack", false);
                 TurnOffJetpack();
             }
-            Debug.Log("Current fuel: " + m_CurrentJetpackFuel);
 
         }
 
@@ -327,7 +334,6 @@ public class PlayerController : MonoBehaviour
             {
                 m_CurrentJetpackFuel = m_MaxJetpackFuel;
             }
-            Debug.Log("Current fuel: " + m_CurrentJetpackFuel);
         }
     }
 
@@ -371,9 +377,10 @@ public class PlayerController : MonoBehaviour
                 m_IsHit = true;
             }
 
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, MaxHealth);
-        HealthBar.instance.SetValue(currentHealth / MaxHealth);
-        if (currentHealth == 0)
+        m_CurrentHealth = Mathf.Clamp(m_CurrentHealth + amount, 0, MaxHealth);
+        Debug.Log("Health: " + m_CurrentHealth);
+        HealthBar.instance.SetValue(m_CurrentHealth / MaxHealth);
+        if (m_CurrentHealth == 0)
         {
             Die();
         }
@@ -381,7 +388,7 @@ public class PlayerController : MonoBehaviour
 
     void SpriteBlinkingEffect()
     {
-        if (currentHealth == 0)
+        if (m_CurrentHealth == 0)
         {
             return;
         }
@@ -454,13 +461,13 @@ public class PlayerController : MonoBehaviour
         Instantiate(shootEffect, playerPos + Vector2.up * 0.13f + Vector2.right * lookDirection.x * 0.90f,
                         Quaternion.AngleAxis(angle, Vector3.forward));
 
-        GameObject projectileObject = Instantiate(projectilePrefab, playerPos + Vector2.up * 0.13f + 
+        GameObject projectileObject = Instantiate(usedProjectilePrefab, playerPos + Vector2.up * 0.13f + 
                                     Vector2.right * lookDirection.x * 0.95f, 
                                     Quaternion.AngleAxis(angle, Vector3.forward));
 
         PlayerProjectile projectile = projectileObject.GetComponent<PlayerProjectile>();
         projectile.Damage = shootDamage;
-        projectile.Launch(direction, 500);
+        projectile.Launch(direction, projectileForce);
     }
 
     void UseLongArm()
@@ -541,14 +548,26 @@ public class PlayerController : MonoBehaviour
         m_JetpackBoostVelocity = jetpackBoost;
     }
 
+    void SetNuclearGun(float newDamage)
+    {
+        shootDamage = newDamage;
+        usedProjectilePrefab = nuclearGunProjectile;
+    }
+
+    void SetIronSkin(float modifier)
+    {
+        MaxHealth = modifier * MaxHealth;
+        m_CurrentHealth = MaxHealth;
+    }
+
     bool CanUseExtendableArm()
     {
-        return PlayerSkills.instance.IsSkillUnlocked(PlayerSkills.SkillType.ExtendableArm);
+        return m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.ExtendableArm);
     }
 
     bool CanUseJetpack()
     {
-        return PlayerSkills.instance.IsSkillUnlocked(PlayerSkills.SkillType.Jetpack);
+        return m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Jetpack);
     }
     
 }

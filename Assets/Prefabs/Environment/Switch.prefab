@@ -49,6 +49,8 @@ MonoBehaviour:
   activatedSwitch: {fileID: 6750524113721012536}
   linkedDoor: {fileID: 0}
   messageTime: 3
+  switchID: 
+  m_IsActivated: 0
 --- !u!61 &7461889232551548947
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -323,8 +325,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press E to activate
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ccc3d76e624873240ae94d47247d1918, type: 2}
+  m_sharedMaterial: {fileID: 5669293719207983021, guid: ccc3d76e624873240ae94d47247d1918,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -348,7 +351,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 59.25
+  m_fontSize: 42.6
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1

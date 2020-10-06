@@ -31,11 +31,11 @@ public class DoorBehaviour : MonoBehaviour
     
     void Awake()
     {
-        m_DoorsManager = DoorsManager.GetInstance();
+        m_DoorsManager = DoorsManager.Instance;
 
         if (m_DoorsManager.FindDoor(doorID) == null)
         {
-            m_DoorsManager.AddDoor(this);
+            m_DoorsManager.AddDoor(gameObject.scene.name, this);
             DontDestroyOnLoad(this);
             unlockedDoor.SetActive(false);
             openDoor.SetActive(false);
@@ -107,6 +107,8 @@ public class DoorBehaviour : MonoBehaviour
 
     public void ChangeLevel()
     {
+        m_DoorsManager.DisableSceneObjects(SceneManager.GetActiveScene().name);
+        m_DoorsManager.EnableNextSceneObjects(connectedScene);
         SceneManager.LoadScene(connectedScene, LoadSceneMode.Single);
         SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, SceneManager.GetSceneByName(connectedScene));
         SceneManager.sceneLoaded += OnSceneLoaded;  

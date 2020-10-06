@@ -178,10 +178,10 @@ MonoBehaviour:
   m_Caught: 0
   m_Cooling: 0
   m_LookDirection: 1
-  shootCooldown: 3
+  shootCooldown: 2
   projectilePrefab: {fileID: 1222207492220009179, guid: 56a213ffd1b5f8f489823340aac7f234,
     type: 3}
-  projectileForce: 500
+  projectileForce: 50
   m_ShootTimer: 0
 --- !u!1 &6731382696257422663
 GameObject:

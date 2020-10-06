@@ -37,6 +37,11 @@ public class Projectile : MonoBehaviour
         m_Rigidbody.AddForce(direction * force);
     }
 
+    public void Launch(float velocity)
+    {
+        m_Rigidbody.velocity = new Vector2(velocity, velocity);
+    }
+
     void OnCollisionEnter2D(Collision2D other)
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();

@@ -46,6 +46,7 @@ public class MeleeEnemy : BaseEnemy
             if (distance > attackDistance)
             {
                 m_Animator.SetBool("Can Run", true);
+                m_Animator.SetBool("Can Walk", false);
                 m_RigidBody.velocity = (Vector2.right * runSpeed * m_LookDirection  + Vector2.up * m_RigidBody.velocity.y) * m_StatsModifier;
             }
             else
@@ -91,7 +92,6 @@ public class MeleeEnemy : BaseEnemy
         if (player != null)
         {
             m_PlayerInRange = false;
-            m_Animator.SetBool("Can Walk", true);
         }
     }
 
@@ -117,7 +117,6 @@ public class MeleeEnemy : BaseEnemy
     {
         m_MeleeTimer = meleeCooldown;
         m_Cooling = true;
-        m_Animator.SetBool("Can Walk", false);
         m_Animator.SetBool("Can Run", false);
         m_Animator.SetTrigger("Melee");
     }
@@ -127,7 +126,6 @@ public class MeleeEnemy : BaseEnemy
         if (!m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
         {
             Vector2 targetPos = new Vector2(target.position.x, transform.position.y);
-            m_Animator.SetBool("Can Run", true);
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime * m_StatsModifier);
         }
     }
