@@ -170,6 +170,8 @@ MonoBehaviour:
   enemyDamage: 2
   hurtEffect: {fileID: 4723599629877341064, guid: 7a6ce3a6cee59fc4e904df13e6c67598,
     type: 3}
+  rightBoundary: {fileID: 0}
+  leftBoundary: {fileID: 0}
   m_Health: 0
   m_MovedTime: 0
   m_StatsModifier: 0

@@ -7,20 +7,12 @@ public class MeleeEnemy : BaseEnemy
     public float runSpeed;
     public float attackDistance;
     public float meleeCooldown;
-    public Transform leftBoundary;
-    public Transform rightBoundary;
     [SerializeField] float m_MeleeTimer;
-    Transform target;
 
-
-    protected override void Awake()
+    protected override void Update()
     {
-        base.Awake();
-        SelectNextPatrolPoint();
-    }
+        base.Update();
 
-    void Update()
-    {
         if (m_Caught)
         {
             m_Animator.SetBool("Can Walk", false);
@@ -29,11 +21,6 @@ public class MeleeEnemy : BaseEnemy
         }
 
         UpdateTimers();
-
-        if (!IsBetweenBoundaries() && !m_PlayerInRange && !m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
-        {
-            SelectNextPatrolPoint();
-        }
 
         if (m_PlayerInRange)
         {
@@ -94,37 +81,6 @@ public class MeleeEnemy : BaseEnemy
         }
     }
 
-    void SelectNextPatrolPoint()
-    {
-        float distanceToLeft = Vector2.Distance(transform.position, leftBoundary.position);
-        float distanceToRight = Vector2.Distance(transform.position, rightBoundary.position);
-
-        if (distanceToLeft > distanceToRight)
-        {
-            target = leftBoundary;
-        }
-        else
-        {
-            target = rightBoundary;
-        }
-
-        Flip();
-    }
-
-    void Flip()
-    {
-        if (transform.position.x > target.position.x)
-        {
-            m_LookDirection = -1;
-        }
-        else
-        {
-            m_LookDirection = 1;
-        }
-
-        m_Animator.SetFloat("Look Direction", m_LookDirection);
-    }
-
     void OnTriggerStay2D(Collider2D other)
     {
         PlayerController player = other.GetComponent<PlayerController>();
@@ -146,11 +102,6 @@ public class MeleeEnemy : BaseEnemy
         {
             m_PlayerInRange = false;
         }
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        Flip();
     }
 
     void EnemyLogic()
@@ -186,10 +137,5 @@ public class MeleeEnemy : BaseEnemy
             Vector2 targetPos = new Vector2(target.position.x, transform.position.y);
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime * m_StatsModifier);
         }
-    }
-
-    bool IsBetweenBoundaries()
-    {
-        return transform.position.x > leftBoundary.position.x && transform.position.x < rightBoundary.position.x;
     }
 }

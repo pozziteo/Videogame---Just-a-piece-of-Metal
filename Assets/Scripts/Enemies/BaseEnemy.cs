@@ -10,6 +10,8 @@ public abstract class BaseEnemy : MonoBehaviour
     public float startHealth;
     public float enemyDamage;
     public ParticleSystem hurtEffect;
+    public Transform rightBoundary;
+    public Transform leftBoundary;
     [SerializeField] float m_Health;
     [SerializeField] protected float m_MovedTime;              //elapsed time moving in a direction
     protected float m_PoisonedTime;
@@ -22,6 +24,7 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected bool m_Caught;              //enemy has been caught by the player's long arm
     [SerializeField] protected bool m_Cooling;                 //cooling down from an attack
     [SerializeField] protected int m_LookDirection = 1;        //direction of movement
+    protected Transform target;
 
     protected virtual void Awake()
     {
@@ -31,11 +34,21 @@ public abstract class BaseEnemy : MonoBehaviour
         m_Health = startHealth;
         m_StatsModifier = 1f;
         m_Animator.SetFloat("Look Direction", m_LookDirection);
+
+        SelectNextPatrolPoint();
+    }
+
+    protected virtual void Update()
+    {
+        if (!IsBetweenBoundaries() && !m_PlayerInRange && !m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
+        {
+            SelectNextPatrolPoint();
+        }
     }
 
     protected virtual void UpdateTimers()
     {
-        if (!m_PlayerInRange)
+        /*if (!m_PlayerInRange)
         {
             m_MovedTime -= Time.deltaTime * m_StatsModifier;
             if (m_MovedTime < 0 && !m_PlayerInRange)
@@ -44,7 +57,7 @@ public abstract class BaseEnemy : MonoBehaviour
                 m_Animator.SetFloat("Look Direction", m_LookDirection);
                 m_MovedTime = moveTimer;
             }
-        }
+        } */
 
         if (m_Poisoned)
         {
@@ -56,6 +69,37 @@ public abstract class BaseEnemy : MonoBehaviour
                 m_PoisonTotalTime = 0f;
             }
         }
+    }
+
+    void SelectNextPatrolPoint()
+    {
+        float distanceToLeft = Vector2.Distance(transform.position, leftBoundary.position);
+        float distanceToRight = Vector2.Distance(transform.position, rightBoundary.position);
+
+        if (distanceToLeft > distanceToRight)
+        {
+            target = leftBoundary;
+        }
+        else
+        {
+            target = rightBoundary;
+        }
+
+        Flip();
+    }
+
+    void Flip()
+    {
+        if (transform.position.x > target.position.x)
+        {
+            m_LookDirection = -1;
+        }
+        else
+        {
+            m_LookDirection = 1;
+        }
+
+        m_Animator.SetFloat("Look Direction", m_LookDirection);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -73,7 +117,12 @@ public abstract class BaseEnemy : MonoBehaviour
         {
             m_RigidBody.isKinematic = false;
         }
-    } 
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Flip();
+    }
 
     public void ChangeHealth(float amount)
     {
@@ -106,5 +155,10 @@ public abstract class BaseEnemy : MonoBehaviour
             Vector2 direction = followPos - (Vector2) gameObject.transform.position;
             m_RigidBody.transform.Translate(direction * Time.fixedDeltaTime * attractionSpeed);
         }
+    }
+
+    bool IsBetweenBoundaries()
+    {
+        return transform.position.x > leftBoundary.position.x && transform.position.x < rightBoundary.position.x;
     }
 }

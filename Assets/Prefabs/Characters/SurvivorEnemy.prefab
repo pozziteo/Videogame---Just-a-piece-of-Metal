@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6324044692795703911}
   - component: {fileID: 1545372334}
   m_Layer: 11
-  m_Name: Survivor
+  m_Name: SurvivorEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6576572943871730249}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.19, y: 4.16, z: 0}
-  m_LocalScale: {x: 2.456333, y: 2.456333, z: 2.456333}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5254923723812687040}
   m_Father: {fileID: 0}
@@ -120,18 +120,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.05998239, y: 0.014544666}
+  m_Offset: {x: -0.10740709, y: 0.028097868}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 2.5, y: 2.5}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.58921105, y: 0.9418217}
+  m_Size: {x: 1.1718569, y: 2.3513446}
   m_EdgeRadius: 0
 --- !u!95 &6324044692795703911
 Animator:
@@ -170,6 +170,8 @@ MonoBehaviour:
   enemyDamage: 0.5
   hurtEffect: {fileID: 4723599629877341064, guid: 24532092c38379e498130d821749c30d,
     type: 3}
+  rightBoundary: {fileID: 0}
+  leftBoundary: {fileID: 0}
   m_Health: 0
   m_MovedTime: 0
   m_StatsModifier: 0
@@ -185,6 +187,7 @@ MonoBehaviour:
     type: 3}
   projectileForce: 50
   bombDamage: 0
+  canUseBombs: 0
   m_ShootTimer: 0
   m_AttackType: 0
 --- !u!1 &6731382696257422663
@@ -233,4 +236,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4.93
+  m_Radius: 11.3

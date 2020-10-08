@@ -17,7 +17,6 @@ public class RangedEnemy : BaseEnemy
     public bool canUseBombs;
     [SerializeField] float m_ShootTimer;             //countdown to be able to attack again
     [SerializeField] RangedAttackType m_AttackType;
-    Transform target;
     float m_LaunchProjectileAngle;
     Vector2 m_LaunchProjectileDirection;
     float m_LaunchProjectileForce;
@@ -37,8 +36,10 @@ public class RangedEnemy : BaseEnemy
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (m_Caught)
         {
             m_Animator.SetBool("Can Walk", false);
