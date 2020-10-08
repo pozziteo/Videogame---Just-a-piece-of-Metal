@@ -325,6 +325,8 @@ MonoBehaviour:
   runSpeed: 3.5
   attackDistance: 3
   meleeCooldown: 3.5
+  leftBoundary: {fileID: 0}
+  rightBoundary: {fileID: 0}
   m_MeleeTimer: 0
 --- !u!1 &4636872565365995951
 GameObject:
@@ -335,7 +337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4056051496034955944}
-  - component: {fileID: 8617319775083429599}
+  - component: {fileID: 4903974036173931496}
   m_Layer: 11
   m_Name: PlayerDetection
   m_TagString: Untagged
@@ -357,8 +359,8 @@ Transform:
   m_Father: {fileID: 5735190028581468666}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &8617319775083429599
-CircleCollider2D:
+--- !u!61 &4903974036173931496
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -370,6 +372,16 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.06278038, y: 0}
+  m_Offset: {x: -0.7895851, y: 0.8792362}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 8.7385845
+  m_Size: {x: 21.682549, y: 5.2779655}
+  m_EdgeRadius: 0

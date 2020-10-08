@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SwitchBehaviour : MonoBehaviour
 {
-    static List<string> SwitchIDs;
     public GameObject messageBox;
     public GameObject activatedSwitch;
     public DoorBehaviour linkedDoor;
@@ -12,17 +11,15 @@ public class SwitchBehaviour : MonoBehaviour
     public string switchID;
     float m_ElapsedTime;
     [SerializeField] bool m_IsActivated;
+    SwitchManager m_SwitchManager;
 
     void Awake()
     {
-        if (SwitchIDs == null)
-        {
-            SwitchIDs = new List<string>();
-        }
+        m_SwitchManager = SwitchManager.Instance;
 
-        if (!SwitchIDs.Contains(switchID))
+        if (m_SwitchManager.FindSwitch(switchID) == null)
         {
-            SwitchIDs.Add(switchID);
+            m_SwitchManager.AddSwitch(gameObject.scene.name, this);
             DontDestroyOnLoad(this);
         }
         else

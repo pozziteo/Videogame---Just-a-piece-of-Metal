@@ -32,9 +32,9 @@ public class SkillUnlocker : MonoBehaviour
             faderCanvas.alpha = 0f;
             GameObject fadeImage = faderCanvas.transform.Find("Black").gameObject;
             TMP_Text nameText = fadeImage.transform.Find("SkillName").gameObject.GetComponent<TMP_Text>();
-            nameText.text = "You unlocked\n" + skillUnlock.ToString().ToUpper() + "\n\n\n\n";
+            nameText.text = "You unlocked\n" + PlayerSkills.GetSkillDescription(skillUnlock).ToUpper() + "\n\n\n\n";
             TMP_Text descrText = fadeImage.transform.Find("SkillDescription").gameObject.GetComponent<TMP_Text>();
-            descrText.text = PlayerSkills.GetSkillDescription(skillUnlock);
+            descrText.text = PlayerSkills.GetSkillExplanation(skillUnlock);
         }
         else
         {

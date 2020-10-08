@@ -22,17 +22,17 @@ public class PlayerSkills
 
     public enum SkillType {
 
-        [Description("Now you can jump higher than before")]
+        [Description("Propulsors")]
         Propulsors,
-        [Description("Now you can move faster than before")]
+        [Description("Magnetic Accelerators")]
         MagneticAccelerators,
-        [Description("Now you can use an extendable arm. Use it against enemies or with the environment\n\nPress Q to use the arm")]
+        [Description("Extendable Arm")]
         ExtendableArm,
-        [Description("Now you can use a jetpack when you are in air. Hold SPACE to use it")]
+        [Description("Jetpack")]
         Jetpack,
-        [Description("Now your projectiles are more powerful")]
+        [Description("Nuclear Gun")]
         NuclearGun,
-        [Description("Your maximum health is now increased")]
+        [Description("Iron Skin")]
         IronSkin
     }
 
@@ -59,6 +59,37 @@ public class PlayerSkills
         DescriptionAttribute[] da = (DescriptionAttribute[])(value.GetType().GetField(value.ToString()))
                                         .GetCustomAttributes(typeof(DescriptionAttribute), false);
 		return da.Length > 0 ? da[0].Description : value.ToString();
+    }
+
+    public static string GetSkillExplanation(SkillType skill)
+    {
+        string descr = null;
+        switch (skill)
+        {
+            case SkillType.Propulsors:
+                descr = "Now you can jump higher than before";
+                break;
+            case SkillType.MagneticAccelerators:
+                descr = "Now you can move faster than before";
+                break;
+            case SkillType.ExtendableArm:
+                descr = "Now you can use an extendable arm. Use it against enemies or with the environment\n\nPress Q to use the arm";
+                break;
+            case SkillType.Jetpack:
+                descr = "Now you can use a jetpack when you are in air. Hold SPACE to use it";
+                break;
+            case SkillType.NuclearGun:
+                descr = "Now your projectiles are more powerful";
+                break;
+            case SkillType.IronSkin:
+                descr = "Your maximum health is now increased";
+                break;
+            default:
+                descr = "Undefined";
+                break;
+        }
+        return descr;
+
     }
 
     public void UnlockSkill(SkillType type)

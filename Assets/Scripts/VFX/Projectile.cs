@@ -16,6 +16,8 @@ public class Projectile : MonoBehaviour
     float m_ActualTimer;
     Rigidbody2D m_Rigidbody;
     float m_Damage;
+
+    
     void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody2D>();
@@ -37,12 +39,7 @@ public class Projectile : MonoBehaviour
         m_Rigidbody.AddForce(direction * force);
     }
 
-    public void Launch(float velocity)
-    {
-        m_Rigidbody.velocity = new Vector2(velocity, velocity);
-    }
-
-    void OnCollisionEnter2D(Collision2D other)
+    protected virtual void OnCollisionEnter2D(Collision2D other)
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
         if (player != null)

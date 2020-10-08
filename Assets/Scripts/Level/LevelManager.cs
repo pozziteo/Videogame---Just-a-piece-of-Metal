@@ -19,11 +19,13 @@ public class LevelManager
 
     public Dictionary<string, List<DoorBehaviour>> doorsInScene;
     public Dictionary<string, List<SkillUnlocker>> skillsInScene;
+    public Dictionary<string, List<SwitchBehaviour>> switchInScene;
 
     LevelManager()
     {
         doorsInScene = new Dictionary<string, List<DoorBehaviour>>();
         skillsInScene = new Dictionary<string, List<SkillUnlocker>>();
+        switchInScene = new Dictionary<string, List<SwitchBehaviour>>();
     }
 
     public void RegisterDoor(string sceneName, DoorBehaviour door)
@@ -52,10 +54,24 @@ public class LevelManager
         skills.Add(skillUnlocker);
     }
 
+    public void RegisterSwitch(string sceneName, SwitchBehaviour swit)
+    {
+        bool present = switchInScene.TryGetValue(sceneName, out List<SwitchBehaviour> switches);
+
+        if (!present)
+        {
+            switches = new List<SwitchBehaviour>();
+            switchInScene.Add(sceneName, switches);
+        }
+
+        switches.Add(swit);
+    }
+
     public void DisablePersistentObjects(string sceneName)
     {
         DisableSceneDoors(sceneName);
         DisableSceneSkills(sceneName);
+        DisableSceneSwitches(sceneName);
     }
 
     void DisableSceneDoors(string currentScene)
@@ -78,10 +94,21 @@ public class LevelManager
         }
     }
 
+    void DisableSceneSwitches(string currentScene)
+    {
+        switchInScene.TryGetValue(currentScene, out List<SwitchBehaviour> activeSwitches);
+
+        foreach (SwitchBehaviour swit in activeSwitches)
+        {
+            swit.gameObject.SetActive(false);
+        }
+    }
+
     public void EnablePersistentObjects(string sceneName)
     {
         EnableNextSceneDoors(sceneName);
         EnableNextSceneSkills(sceneName);
+        EnableNextSceneSwitches(sceneName);
     }
 
     void EnableNextSceneDoors(string nextScene)
@@ -106,6 +133,19 @@ public class LevelManager
             foreach (SkillUnlocker skill in skills)
             {
                 skill.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    void EnableNextSceneSwitches(string nextScene)
+    {
+        bool alreadyVisited = switchInScene.TryGetValue(nextScene, out List<SwitchBehaviour> switches);
+
+        if (alreadyVisited)
+        {
+            foreach (SwitchBehaviour swit in switches)
+            {
+                swit.gameObject.SetActive(true);
             }
         }
     }

@@ -13,16 +13,27 @@ public class RangedEnemy : BaseEnemy
     public GameObject projectilePrefab;
     public GameObject bombPrefab;
     public float projectileForce;
+    public float bombDamage;
+    public bool canUseBombs;
     [SerializeField] float m_ShootTimer;             //countdown to be able to attack again
     [SerializeField] RangedAttackType m_AttackType;
     Transform target;
     float m_LaunchProjectileAngle;
     Vector2 m_LaunchProjectileDirection;
-    float m_LaunchProjectileVelocity;
+    float m_LaunchProjectileForce;
 
-    void Awake()
+    protected override void Awake()
     {
-        m_AttackType = (RangedAttackType) Random.Range(0, System.Enum.GetValues(typeof(RangedAttackType)).Length);
+        base.Awake();
+
+        if (canUseBombs)
+        {
+            m_AttackType = (RangedAttackType) Random.Range(0, System.Enum.GetValues(typeof(RangedAttackType)).Length);
+        }
+        else
+        {
+            m_AttackType = RangedAttackType.Shooter; 
+        }
     }
 
     // Update is called once per frame
@@ -137,13 +148,13 @@ public class RangedEnemy : BaseEnemy
                 break;
             
             case RangedAttackType.Bomber:
-                Vector2 dirBomb = new Vector2(m_LookDirection, 1f);
-                dirBomb.Normalize();
 
-                m_LaunchProjectileAngle = 45f;
-                m_LaunchProjectileDirection = dirBomb;
-                m_LaunchProjectileVelocity = Mathf.Sqrt(playerPos.x * Mathf.Abs(Physics2D.gravity.y) / 
-                                                (2f * Mathf.Cos(Mathf.PI/4f) * Mathf.Sin(Mathf.PI/4f)));
+                float distance = Vector2.Distance(playerPos, enemyPos);
+                m_LaunchProjectileDirection = playerPos - enemyPos + Vector2.up * 0.5f;
+                m_LaunchProjectileDirection.Normalize();
+
+                m_LaunchProjectileForce = distance * 6f;
+              
                 break;
         }
         
@@ -168,8 +179,8 @@ public class RangedEnemy : BaseEnemy
                                     Vector3.right * m_LookDirection * 0.95f,
                                     Quaternion.AngleAxis(m_LaunchProjectileAngle, Vector3.forward));
                 Projectile projectile1 = bombObject.GetComponent<Projectile>();
-                projectile1.Damage = enemyDamage;
-                projectile1.Launch(m_LaunchProjectileVelocity);
+                projectile1.Damage = bombDamage;
+                projectile1.Launch(m_LaunchProjectileDirection, m_LaunchProjectileForce);
                 break;
         }
         

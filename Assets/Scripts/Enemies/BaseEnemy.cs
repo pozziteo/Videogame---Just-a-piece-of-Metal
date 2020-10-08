@@ -23,9 +23,7 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected bool m_Cooling;                 //cooling down from an attack
     [SerializeField] protected int m_LookDirection = 1;        //direction of movement
 
-
-    // Start is called before the first frame update
-    void Start()
+    protected virtual void Awake()
     {
         m_Animator = GetComponent<Animator>();
         m_RigidBody = GetComponent<Rigidbody2D>();
@@ -33,19 +31,6 @@ public abstract class BaseEnemy : MonoBehaviour
         m_Health = startHealth;
         m_StatsModifier = 1f;
         m_Animator.SetFloat("Look Direction", m_LookDirection);
-    }
-
-    void FixedUpdate()
-    {
-        if (m_Caught)
-        {
-            return;
-        }
-
-        if (!m_PlayerInRange)
-        {
-            m_RigidBody.velocity = (Vector2.right * moveSpeed * m_LookDirection  + Vector2.up * m_RigidBody.velocity.y) * m_StatsModifier;
-        }
     }
 
     protected virtual void UpdateTimers()

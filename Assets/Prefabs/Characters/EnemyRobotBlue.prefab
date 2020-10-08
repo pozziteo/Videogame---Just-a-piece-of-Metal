@@ -181,10 +181,13 @@ MonoBehaviour:
   shootCooldown: 2
   projectilePrefab: {fileID: 5482053514898117472, guid: cfd3af3a9cbd7834bbd2a1a6d21ae162,
     type: 3}
-  bombPrefab: {fileID: 1222207492220009179, guid: 56a213ffd1b5f8f489823340aac7f234,
+  bombPrefab: {fileID: 5863703201374663311, guid: 38cc9f4eb11082d4fb020bc6a1569eba,
     type: 3}
   projectileForce: 70
+  bombDamage: 3
+  canUseBombs: 1
   m_ShootTimer: 0
+  m_AttackType: 0
 --- !u!1 &7245815259022403590
 GameObject:
   m_ObjectHideFlags: 0

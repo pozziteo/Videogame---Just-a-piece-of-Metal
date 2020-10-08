@@ -22,9 +22,9 @@ public class PlayerController : MonoBehaviour
     public GameObject nuclearGunProjectile;     //Projectile prefab of the skill NuclearGun
     public ParticleSystem shootEffect;      //Particle system when shooting
     public ParticleSystem jetpackEffect;    //Particle system when using jetpack
-    Vector2 lookDirection = new Vector2(1,0);       //Look direction of the player
+    Vector2 m_LookDirection = new Vector2(1,0);       //Look direction of the player
     Vector2 m_PlayerInput;              //Input movement
-    Rigidbody2D rigidBody;
+    Rigidbody2D m_Rigidbody;
     Animator m_Animator;
     PlayerSkills m_PlayerSkills;
     [SerializeField] GameObject m_ActualCheckpoint;
@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_UsingLongArm;
     [SerializeField] bool m_Grabbed;
     [SerializeField] bool m_UsingJetpack;
+    [SerializeField] bool m_ArmBoost;
     static float m_CurrentHealth = MaxHealth;
     float m_InvincibleTimer;
     float m_BlinkingTime;
@@ -69,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     void Start () 
     {
-        rigidBody = GetComponent<Rigidbody2D> ();
+        m_Rigidbody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
     }
 
@@ -107,13 +108,13 @@ public class PlayerController : MonoBehaviour
         if (m_IsDead)
         {
             m_IsInvincible = true;
-            if (rigidBody.velocity.y < 0)
+            if (m_Rigidbody.velocity.y < 0)
             {
-                rigidBody.velocity = Vector2.up * rigidBody.velocity;
+                m_Rigidbody.velocity = Vector2.up * m_Rigidbody.velocity;
             }
             else 
             {
-                rigidBody.velocity = Vector2.zero;
+                m_Rigidbody.velocity = Vector2.zero;
             }
             m_DeathTimer += Time.deltaTime;
             if (m_DeathTimer > timeDead)
@@ -152,11 +153,11 @@ public class PlayerController : MonoBehaviour
 
         if(!Mathf.Approximately(m_PlayerInput.x, 0.0f) || !Mathf.Approximately(m_PlayerInput.y, 0.0f))
         {
-            lookDirection.Set(m_PlayerInput.x, m_PlayerInput.y);
-            lookDirection.Normalize();
+            m_LookDirection.Set(m_PlayerInput.x, m_PlayerInput.y);
+            m_LookDirection.Normalize();
         }
 
-        m_Animator.SetFloat("Look X", lookDirection.x);
+        m_Animator.SetFloat("Look X", m_LookDirection.x);
 
         if(Input.GetKeyDown(KeyCode.Space) && m_IsGrounded)
         {
@@ -165,7 +166,7 @@ public class PlayerController : MonoBehaviour
 
          else if (Input.GetKeyDown(KeyCode.E))
         {
-            RaycastHit2D hit = Physics2D.Raycast(rigidBody.position + Vector2.up * 0.2f, lookDirection, 
+            RaycastHit2D hit = Physics2D.Raycast(m_Rigidbody.position + Vector2.up * 0.2f, m_LookDirection, 
                                     1.5f, LayerMask.GetMask("Environment"));
             if (hit.collider != null)
             {
@@ -223,51 +224,50 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (!m_UsingLongArm) 
+        if (!m_UsingLongArm)        //Condition for standard movement
         {
-            rigidBody.velocity = new Vector2(MoveSpeed * m_PlayerInput.x, rigidBody.velocity.y) * m_StatsModifier;
+            m_Rigidbody.velocity = new Vector2(MoveSpeed * m_PlayerInput.x, m_Rigidbody.velocity.y) * m_StatsModifier;
         }
 
         else 
         {
-            if (!m_IsGrounded && !m_Grabbed)
+            if (!m_IsGrounded && !m_ArmBoost)    //Using long arm while in air slows down the character
             {
-                rigidBody.velocity = new Vector2(MoveSpeed * m_PlayerInput.x * 0.2f, rigidBody.velocity.y * 0.2f) * m_StatsModifier;
+                m_Rigidbody.velocity = new Vector2(MoveSpeed * m_PlayerInput.x * 0.2f, m_Rigidbody.velocity.y * 0.2f) * m_StatsModifier;
             }
 
-            else if (m_IsGrounded && !m_Grabbed)
+            else if (!m_ArmBoost)        //If using long arm while on ground, stop the character
             {
-                rigidBody.velocity = Vector2.zero;
-            }
-
-            else 
-            {
-                rigidBody.velocity = Vector2.right * lookDirection * 7f + Vector2.up * 7f;
+                m_Rigidbody.velocity = Vector2.zero;
             }
         }
      
         if (m_ShouldJump && m_IsGrounded) 
         {
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, JumpSpeed) * m_StatsModifier;
+            m_Rigidbody.velocity = new Vector2(m_Rigidbody.velocity.x, JumpSpeed) * m_StatsModifier;
             m_Animator.SetTrigger("Jump");
             m_ShouldJump = false;
         }
 
         if (m_UsingJetpack)
         {
-            if (rigidBody.velocity.y < 0)
+            if (m_Rigidbody.velocity.y < 0)
             {
-                rigidBody.velocity += 2.5f * Vector2.up * Time.fixedDeltaTime * m_JetpackBoostVelocity;
+                m_Rigidbody.velocity += 2.5f * Vector2.up * Time.fixedDeltaTime * m_JetpackBoostVelocity;
             }
             else
             {
-                rigidBody.velocity += Vector2.up * Time.fixedDeltaTime * m_JetpackBoostVelocity;               
+                m_Rigidbody.velocity += Vector2.up * Time.fixedDeltaTime * m_JetpackBoostVelocity;               
             }
         }
 
-        else if (rigidBody.velocity.y < 0)
+        else if (m_Rigidbody.velocity.y < 0)
         {
-            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * fallJumpMultiplier * Time.fixedDeltaTime;
+            m_Rigidbody.velocity += Vector2.up * Physics2D.gravity.y * fallJumpMultiplier * Time.fixedDeltaTime;
+            if (m_ArmBoost)
+            {
+                m_ArmBoost = false;
+            }
         }
     }
 
@@ -309,6 +309,7 @@ public class PlayerController : MonoBehaviour
             if (m_LongArmTimer < 0)
             {
                 m_UsingLongArm = false;
+                m_Grabbed = false;
                 m_Animator.SetBool("Long Arm", false);
             }
         }
@@ -353,6 +354,10 @@ public class PlayerController : MonoBehaviour
         {
             m_IsGrounded = true;
             m_Animator.SetBool("Is Grounded", true);
+            /*if (m_ArmBoost)
+            {
+                m_ArmBoost = false;
+            }*/
         }
     }
 
@@ -447,22 +452,22 @@ public class PlayerController : MonoBehaviour
         m_Animator.SetBool("Shoot", true);
         m_IsCooling = true;
 
-        Vector2 playerPos = rigidBody.transform.position;
-        Vector2 direction = new Vector2(Mathf.RoundToInt(lookDirection.x), Mathf.RoundToInt(lookDirection.y));
+        Vector2 playerPos = m_Rigidbody.transform.position;
+        Vector2 direction = new Vector2(Mathf.RoundToInt(m_LookDirection.x), Mathf.RoundToInt(m_LookDirection.y));
         direction.Normalize();
 
         float angle = Mathf.Acos(direction.x / (float) direction.magnitude) * Mathf.Rad2Deg;
 
-        if (lookDirection.y < 0)
+        if (m_LookDirection.y < 0)
         {
             angle = -angle;
         }
 
-        Instantiate(shootEffect, playerPos + Vector2.up * 0.13f + Vector2.right * lookDirection.x * 0.90f,
+        Instantiate(shootEffect, playerPos + Vector2.up * 0.13f + Vector2.right * m_LookDirection.x * 0.90f,
                         Quaternion.AngleAxis(angle, Vector3.forward));
 
         GameObject projectileObject = Instantiate(usedProjectilePrefab, playerPos + Vector2.up * 0.13f + 
-                                    Vector2.right * lookDirection.x * 0.95f, 
+                                    Vector2.right * m_LookDirection.x * 0.95f, 
                                     Quaternion.AngleAxis(angle, Vector3.forward));
 
         PlayerProjectile projectile = projectileObject.GetComponent<PlayerProjectile>();
@@ -472,17 +477,29 @@ public class PlayerController : MonoBehaviour
 
     void UseLongArm()
     {
-        if (CanUseExtendableArm())
+        if (CanUseExtendableArm() && !m_UsingLongArm)
         {
             m_UsingLongArm = true;
             m_Animator.SetBool("Long Arm", true);
             m_LongArmTimer = longArmInterval;
             if (m_IsGrounded)
             {
-                //rigidBody.isKinematic = true;
-                rigidBody.velocity = Vector2.zero;
+                m_Rigidbody.velocity = Vector2.zero;
             }
              
+        }
+    }
+
+    public void ApplyArmVelocityBoost()
+    {
+        if (m_Grabbed)
+        {
+            m_ArmBoost = true;
+            Vector2 forceDir = Vector2.right * m_LookDirection.x + Vector2.up;
+            forceDir.Normalize();
+
+            m_Rigidbody.AddForce(forceDir * 20f, ForceMode2D.Impulse);
+            Debug.Log("Applied force: " + forceDir * 20f);
         }
     }
 
@@ -523,7 +540,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetKinematic(bool value)
     {
-        rigidBody.isKinematic = value;
+        m_Rigidbody.isKinematic = value;
     }
 
     public void SetGrabbed(bool value)

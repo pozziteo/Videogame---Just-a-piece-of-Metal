@@ -37,10 +37,13 @@ public class LongArm : MonoBehaviour
             m_CaughtEnemy.SetCaught(true);
             m_Player.SetKinematic(true);
         }
+        
+    }
 
-        if (collision.gameObject.tag == "Foothold")
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == "Foothold")
         {
-            Debug.Log("Grabbed foothold");
             m_Player.SetGrabbed(true);
         }
     }

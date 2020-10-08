@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5095321600367677034}
   - component: {fileID: 4120981368813526655}
-  - component: {fileID: 4343744130052617264}
+  - component: {fileID: 8520223430847631483}
   m_Layer: 10
   m_Name: ExtendableArm
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &4343744130052617264
+--- !u!61 &8520223430847631483
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,7 +255,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1541432719
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: 21300000, guid: 44b504c0225b8384faae812822e08369, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -324,6 +324,7 @@ MonoBehaviour:
   m_UsingLongArm: 0
   m_Grabbed: 0
   m_UsingJetpack: 0
+  m_ArmBoost: 0
   m_StatsModifier: 1
 --- !u!50 &7964346903777221281
 Rigidbody2D:
