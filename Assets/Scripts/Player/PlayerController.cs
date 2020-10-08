@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool m_Grabbed;
     [SerializeField] bool m_UsingJetpack;
     [SerializeField] bool m_ArmBoost;
+    [SerializeField] bool m_FallingFromJetpack;
     static float m_CurrentHealth = MaxHealth;
     float m_InvincibleTimer;
     float m_BlinkingTime;
@@ -348,16 +349,35 @@ public class PlayerController : MonoBehaviour
         m_ActualCheckpoint = newSpawnPoint;
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (!m_IsGrounded && collision.collider.gameObject.tag == "Ground")
         {
             m_IsGrounded = true;
             m_Animator.SetBool("Is Grounded", true);
-            /*if (m_ArmBoost)
+
+            if (!m_FallingFromJetpack)
             {
-                m_ArmBoost = false;
-            }*/
+                Debug.Log(collision.relativeVelocity.y);
+                if (collision.relativeVelocity.y > 30f)
+                {
+                    float fallDamage = collision.relativeVelocity.y * 0.08f;
+                    if (Mathf.Abs(fallDamage - Mathf.Floor(fallDamage) - 0.5f) < 0.2f)
+                    {
+                        fallDamage = Mathf.Floor(fallDamage) + 0.5f;
+                    }
+                    else
+                    {
+                        fallDamage = Mathf.Round(fallDamage);
+                    }
+
+                    ChangeHealth(-fallDamage);
+                }
+            }
+            else
+            {
+                m_FallingFromJetpack = false;
+            }
         }
     }
 
@@ -517,6 +537,7 @@ public class PlayerController : MonoBehaviour
     void TurnOffJetpack()
     {
         m_UsingJetpack = false;
+        m_FallingFromJetpack = true;
         m_Animator.SetBool("Jetpack", false);
         
         if (m_ParticleJetpack != null)

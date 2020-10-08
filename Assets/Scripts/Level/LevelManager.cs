@@ -78,9 +78,12 @@ public class LevelManager
     {
         doorsInScene.TryGetValue(currentScene, out List<DoorBehaviour> activeDoors);
 
-        foreach (DoorBehaviour door in activeDoors)
+        if (activeDoors != null)
         {
-            door.gameObject.SetActive(false);
+            foreach (DoorBehaviour door in activeDoors)
+            {
+                door.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -88,9 +91,12 @@ public class LevelManager
     {
         skillsInScene.TryGetValue(currentScene, out List<SkillUnlocker> activeSkills);
 
-        foreach (SkillUnlocker skill in activeSkills)
-        {
-            skill.gameObject.SetActive(false);
+        if (activeSkills != null)
+        {   
+            foreach (SkillUnlocker skill in activeSkills)
+            {
+                skill.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -98,9 +104,12 @@ public class LevelManager
     {
         switchInScene.TryGetValue(currentScene, out List<SwitchBehaviour> activeSwitches);
 
-        foreach (SwitchBehaviour swit in activeSwitches)
+        if (activeSwitches != null)
         {
-            swit.gameObject.SetActive(false);
+            foreach (SwitchBehaviour swit in activeSwitches)
+            {
+                swit.gameObject.SetActive(false);
+            }
         }
     }
 

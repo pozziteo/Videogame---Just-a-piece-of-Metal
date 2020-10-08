@@ -325,6 +325,7 @@ MonoBehaviour:
   m_Grabbed: 0
   m_UsingJetpack: 0
   m_ArmBoost: 0
+  m_FallingFromJetpack: 0
   m_StatsModifier: 1
 --- !u!50 &7964346903777221281
 Rigidbody2D:
@@ -360,7 +361,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.21491909, y: -0.081894755}
+  m_Offset: {x: -0.21491909, y: -0.17475343}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -371,7 +372,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.2927082, y: 4.6182203}
+  m_Size: {x: 2.2927082, y: 4.8039374}
   m_EdgeRadius: 0
 --- !u!1 &9057298188734348734
 GameObject:

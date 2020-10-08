@@ -37,12 +37,20 @@ public class DoorBehaviour : MonoBehaviour
         {
             m_DoorsManager.AddDoor(gameObject.scene.name, this);
             DontDestroyOnLoad(this);
-            unlockedDoor.SetActive(false);
-            openDoor.SetActive(false);
         }
         else
         {
             Destroy(gameObject);
+        }
+
+        if (unlockedDoor.gameObject.activeSelf)
+        {
+            m_IsUnlocked = true;
+        }
+        else if (openDoor.gameObject.activeSelf)
+        {
+            m_IsUnlocked = true;
+            m_IsOpen = true;
         }
     }
 
@@ -107,11 +115,20 @@ public class DoorBehaviour : MonoBehaviour
 
     public void ChangeLevel()
     {
-        m_DoorsManager.DisableSceneObjects(SceneManager.GetActiveScene().name);
-        m_DoorsManager.EnableNextSceneObjects(connectedScene);
-        SceneManager.LoadScene(connectedScene, LoadSceneMode.Single);
-        SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, SceneManager.GetSceneByName(connectedScene));
-        SceneManager.sceneLoaded += OnSceneLoaded;  
+        if (SceneManager.GetActiveScene().name != connectedScene)
+        {
+            m_DoorsManager.DisableSceneObjects(SceneManager.GetActiveScene().name);
+            m_DoorsManager.EnableNextSceneObjects(connectedScene);
+            SceneManager.LoadScene(connectedScene, LoadSceneMode.Single);
+            SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, SceneManager.GetSceneByName(connectedScene));
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        else
+        {
+            DoorBehaviour otherDoor = m_DoorsManager.FindDoor(connectedDoor);
+            PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
+            PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
+        }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
