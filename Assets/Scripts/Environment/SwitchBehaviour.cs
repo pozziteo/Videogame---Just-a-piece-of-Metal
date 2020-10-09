@@ -9,9 +9,11 @@ public class SwitchBehaviour : MonoBehaviour
     public DoorBehaviour linkedDoor;
     public float messageTime;
     public string switchID;
+    public AudioClip activateSound;
     float m_ElapsedTime;
     [SerializeField] bool m_IsActivated;
     SwitchManager m_SwitchManager;
+    AudioSource m_AudioSource;
 
     void Awake()
     {
@@ -20,6 +22,7 @@ public class SwitchBehaviour : MonoBehaviour
         if (m_SwitchManager.FindSwitch(switchID) == null)
         {
             m_SwitchManager.AddSwitch(gameObject.scene.name, this);
+            m_AudioSource = GetComponent<AudioSource>();
             DontDestroyOnLoad(this);
         }
         else
@@ -65,6 +68,8 @@ public class SwitchBehaviour : MonoBehaviour
         messageBox.SetActive(false);
         m_IsActivated = true;
         linkedDoor.UnlockDoor();
+
+        m_AudioSource.PlayOneShot(activateSound);
     }
 
     void OnTriggerEnter2D(Collider2D other)

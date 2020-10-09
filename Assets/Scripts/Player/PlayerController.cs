@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour
     public GameObject nuclearGunProjectile;     //Projectile prefab of the skill NuclearGun
     public ParticleSystem shootEffect;      //Particle system when shooting
     public ParticleSystem jetpackEffect;    //Particle system when using jetpack
+    public AudioClip simpleGunSound;
+    public AudioClip nuclearGunSound;
+    public List<AudioClip> damageSounds;
+    AudioSource m_AudioSource;
     Vector2 m_LookDirection = new Vector2(1,0);       //Look direction of the player
     Vector2 m_PlayerInput;              //Input movement
     Rigidbody2D m_Rigidbody;
@@ -73,6 +77,7 @@ public class PlayerController : MonoBehaviour
     {
         m_Rigidbody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     //Method called when player unlocks a skill. Change player parameters
@@ -358,10 +363,11 @@ public class PlayerController : MonoBehaviour
 
             if (!m_FallingFromJetpack)
             {
-                Debug.Log(collision.relativeVelocity.y);
-                if (collision.relativeVelocity.y > 30f)
+                float normalizedVerticalVelocity = collision.relativeVelocity.y * 0.85f;
+                Debug.Log(normalizedVerticalVelocity);
+                if (normalizedVerticalVelocity > 25f)
                 {
-                    float fallDamage = collision.relativeVelocity.y * 0.08f;
+                    float fallDamage = normalizedVerticalVelocity * 0.04f;
                     if (Mathf.Abs(fallDamage - Mathf.Floor(fallDamage) - 0.5f) < 0.2f)
                     {
                         fallDamage = Mathf.Floor(fallDamage) + 0.5f;
@@ -400,6 +406,9 @@ public class PlayerController : MonoBehaviour
                 m_IsInvincible = true;
                 m_InvincibleTimer = timeInvincible;
                 m_IsHit = true;
+
+                int indexSound = Random.Range(0, damageSounds.Count);
+                PlaySound(damageSounds[indexSound]);
             }
 
         m_CurrentHealth = Mathf.Clamp(m_CurrentHealth + amount, 0, MaxHealth);
@@ -493,6 +502,14 @@ public class PlayerController : MonoBehaviour
         PlayerProjectile projectile = projectileObject.GetComponent<PlayerProjectile>();
         projectile.Damage = shootDamage;
         projectile.Launch(direction, projectileForce);
+        if (m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.NuclearGun))
+        {
+            PlaySound(nuclearGunSound);
+        }
+        else
+        {
+            PlaySound(simpleGunSound);
+        }
     }
 
     void UseLongArm()
@@ -608,4 +625,8 @@ public class PlayerController : MonoBehaviour
         return m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Jetpack);
     }
     
+    public void PlaySound(AudioClip clip)
+    {
+        m_AudioSource.PlayOneShot(clip);
+    }
 }

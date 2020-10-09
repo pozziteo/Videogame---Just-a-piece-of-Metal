@@ -15,6 +15,8 @@ public class RangedEnemy : BaseEnemy
     public float projectileForce;
     public float bombDamage;
     public bool canUseBombs;
+    public AudioClip normalGunSound;
+    public AudioClip bombSound;
     [SerializeField] float m_ShootTimer;             //countdown to be able to attack again
     [SerializeField] RangedAttackType m_AttackType;
     float m_LaunchProjectileAngle;
@@ -173,6 +175,7 @@ public class RangedEnemy : BaseEnemy
                 Projectile projectile = projectileObject.GetComponent<Projectile>();
                 projectile.Damage = enemyDamage;
                 projectile.Launch(m_LaunchProjectileDirection, projectileForce);
+                PlaySound(normalGunSound);
                 break;
 
             case RangedAttackType.Bomber:
@@ -182,6 +185,7 @@ public class RangedEnemy : BaseEnemy
                 Projectile projectile1 = bombObject.GetComponent<Projectile>();
                 projectile1.Damage = bombDamage;
                 projectile1.Launch(m_LaunchProjectileDirection, m_LaunchProjectileForce);
+                PlaySound(bombSound);
                 break;
         }
         

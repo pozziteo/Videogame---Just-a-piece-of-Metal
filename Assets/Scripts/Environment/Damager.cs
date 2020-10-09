@@ -5,6 +5,13 @@ using UnityEngine;
 public class Damager : MonoBehaviour
 {
     public float damage;
+    public AudioClip damageClip;
+    AudioSource m_AudioSource;
+
+    void Awake()
+    {
+        m_AudioSource = GetComponent<AudioSource>();
+    }
 
     void OnCollisionEnter2D(Collision2D other)
     {
@@ -12,6 +19,7 @@ public class Damager : MonoBehaviour
 
         if (player != null)
         {
+            m_AudioSource.PlayOneShot(damageClip);
             player.ChangeHealth(-damage);
         }
 
@@ -29,6 +37,8 @@ public class Damager : MonoBehaviour
 
         if (player != null)
         {
+            m_AudioSource.PlayOneShot(damageClip);
+            m_AudioSource.loop = true;
             player.ChangeHealth(-damage);
         }
         
@@ -37,6 +47,16 @@ public class Damager : MonoBehaviour
         if (enemy != null)
         {
             enemy.ChangeHealth(-damage);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+         PlayerController player = other.GetComponent<PlayerController>();
+
+        if (player != null)
+        {
+            m_AudioSource.Stop();
         }
     }
 }

@@ -12,6 +12,7 @@ public abstract class BaseEnemy : MonoBehaviour
     public ParticleSystem hurtEffect;
     public Transform rightBoundary;
     public Transform leftBoundary;
+    AudioSource m_AudioSource;
     [SerializeField] float m_Health;
     [SerializeField] protected float m_MovedTime;              //elapsed time moving in a direction
     protected float m_PoisonedTime;
@@ -30,6 +31,7 @@ public abstract class BaseEnemy : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
         m_RigidBody = GetComponent<Rigidbody2D>();
+        m_AudioSource = GetComponent<AudioSource>();
         m_MovedTime = moveTimer;
         m_Health = startHealth;
         m_StatsModifier = 1f;
@@ -48,17 +50,6 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void UpdateTimers()
     {
-        /*if (!m_PlayerInRange)
-        {
-            m_MovedTime -= Time.deltaTime * m_StatsModifier;
-            if (m_MovedTime < 0 && !m_PlayerInRange)
-            {
-                m_LookDirection = -m_LookDirection;
-                m_Animator.SetFloat("Look Direction", m_LookDirection);
-                m_MovedTime = moveTimer;
-            }
-        } */
-
         if (m_Poisoned)
         {
             m_PoisonedTime -= Time.deltaTime;
@@ -160,5 +151,10 @@ public abstract class BaseEnemy : MonoBehaviour
     bool IsBetweenBoundaries()
     {
         return transform.position.x > leftBoundary.position.x && transform.position.x < rightBoundary.position.x;
+    }
+
+    protected void PlaySound(AudioClip clip)
+    {
+        m_AudioSource.PlayOneShot(clip);
     }
 }

@@ -4891,3 +4891,4 @@ MonoBehaviour:
   lifeTimer: 2
   explosion: {fileID: 3409700069980867755, guid: 828babd316ce6bf46bf08c88b0c585f6,
     type: 3}
+  explosionSound: {fileID: 8300000, guid: a97bf9b7dcc54f14580cb4e0cd645fca, type: 3}

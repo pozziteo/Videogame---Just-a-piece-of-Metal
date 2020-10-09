@@ -10,11 +10,13 @@ public class DoorBehaviour : MonoBehaviour
     public GameObject openDoor;
     public GameObject unlockedDoorMessage;
     public GameObject openDoorMessage;
+    public AudioClip openingDoorSound;
     public string connectedScene;
     public float messageTime;
     public string doorID;
     public string connectedDoor;
     DoorsManager m_DoorsManager;
+    AudioSource m_AudioSource;
     float m_ElapsedTime;
     bool m_IsUnlocked;
     bool m_IsOpen;
@@ -36,6 +38,7 @@ public class DoorBehaviour : MonoBehaviour
         if (m_DoorsManager.FindDoor(doorID) == null)
         {
             m_DoorsManager.AddDoor(gameObject.scene.name, this);
+            m_AudioSource = GetComponent<AudioSource>();
             DontDestroyOnLoad(this);
         }
         else
@@ -84,6 +87,8 @@ public class DoorBehaviour : MonoBehaviour
         m_IsOpen = true;
         openDoor.SetActive(true);
         unlockedDoor.SetActive(false);
+        m_AudioSource.PlayOneShot(openingDoorSound);
+        openDoor.gameObject.GetComponent<AudioSource>().Play();
     }
 
     void OnTriggerStay2D(Collider2D other)
