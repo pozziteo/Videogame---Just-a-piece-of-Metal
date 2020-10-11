@@ -100,18 +100,18 @@ public class SkillUnlocker : MonoBehaviour
         if (m_FadingTimer < timeFadeScreen)
         {
             m_FadingTimer += Time.unscaledDeltaTime;
-            faderCanvas.alpha = m_FadingTimer / timeFadeScreen * 0.65f;
+            faderCanvas.alpha = m_FadingTimer / timeFadeScreen * 0.8f;
             m_ReverseTimer = m_FadingTimer;
         }
         else if (m_FadingTimer < timeFadeScreen + timeShowMessage)
         {
             m_FadingTimer += Time.unscaledDeltaTime;
-            faderCanvas.alpha = 0.65f;
+            faderCanvas.alpha = 0.8f;
         }
         else
         {
             m_ReverseTimer -= 2f * Time.unscaledDeltaTime;
-            faderCanvas.alpha = m_ReverseTimer / timeFadeScreen * 0.65f;
+            faderCanvas.alpha = m_ReverseTimer / timeFadeScreen * 0.8f;
             if (m_ReverseTimer < 0)
             {
                 Time.timeScale = 1f;

@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public float timeDead;              //Time interval in which player remains dead
     public float attackCooldown;        //Time interval to wait for attacking again
     public float longArmInterval;       //Time interval for long arm animation
+    public float armBoostForce;
     public GameObject usedProjectilePrefab;     //Currently used projectile sprite 
     public GameObject nuclearGunProjectile;     //Projectile prefab of the skill NuclearGun
     public ParticleSystem shootEffect;      //Particle system when shooting
@@ -270,10 +271,6 @@ public class PlayerController : MonoBehaviour
         else if (m_Rigidbody.velocity.y < 0)
         {
             m_Rigidbody.velocity += Vector2.up * Physics2D.gravity.y * fallJumpMultiplier * Time.fixedDeltaTime;
-            if (m_ArmBoost)
-            {
-                m_ArmBoost = false;
-            }
         }
     }
 
@@ -361,11 +358,16 @@ public class PlayerController : MonoBehaviour
             m_IsGrounded = true;
             m_Animator.SetBool("Is Grounded", true);
 
+            if (m_ArmBoost)
+            {
+                m_ArmBoost = false;
+            }
+
             if (!m_FallingFromJetpack)
             {
                 float normalizedVerticalVelocity = collision.relativeVelocity.y * 0.85f;
                 Debug.Log(normalizedVerticalVelocity);
-                if (normalizedVerticalVelocity > 25f)
+                if (normalizedVerticalVelocity > 20f)
                 {
                     float fallDamage = normalizedVerticalVelocity * 0.04f;
                     if (Mathf.Abs(fallDamage - Mathf.Floor(fallDamage) - 0.5f) < 0.2f)
@@ -532,11 +534,11 @@ public class PlayerController : MonoBehaviour
         if (m_Grabbed)
         {
             m_ArmBoost = true;
-            Vector2 forceDir = Vector2.right * m_LookDirection.x + Vector2.up;
+            Vector2 forceDir = Vector2.right * m_LookDirection.x + Vector2.up * 0.8f;
             forceDir.Normalize();
 
-            m_Rigidbody.AddForce(forceDir * 20f, ForceMode2D.Impulse);
-            Debug.Log("Applied force: " + forceDir * 20f);
+            m_Rigidbody.AddForce(forceDir * armBoostForce, ForceMode2D.Impulse);
+            Debug.Log("Applied force: " + forceDir * armBoostForce);
         }
     }
 
@@ -566,6 +568,27 @@ public class PlayerController : MonoBehaviour
     bool IsJetpackReady()
     {
         return m_CurrentJetpackFuel > 0;
+    }
+
+    public void UseRage(float maxRecoverableHealth)
+    {
+        if (CanUseRage())
+        {
+            if (Random.value >= 0.5f)
+            {
+                float recoveredHealth = Random.Range(0f, maxRecoverableHealth / 1.5f);
+                    if (Mathf.Abs(recoveredHealth - Mathf.Floor(recoveredHealth) - 0.5f) < 0.2f)
+                    {
+                        recoveredHealth = Mathf.Floor(recoveredHealth) + 0.5f;
+                    }
+                    else
+                    {
+                        recoveredHealth = Mathf.Round(recoveredHealth);
+                    }
+
+                    ChangeHealth(recoveredHealth);
+            }
+        }
     }
 
     public void Poison(float statsModifier, float poisoningTime)
@@ -623,6 +646,11 @@ public class PlayerController : MonoBehaviour
     bool CanUseJetpack()
     {
         return m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Jetpack);
+    }
+
+    bool CanUseRage()
+    {
+        return m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Rage);
     }
     
     public void PlaySound(AudioClip clip)

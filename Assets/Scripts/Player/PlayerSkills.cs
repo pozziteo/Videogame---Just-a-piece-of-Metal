@@ -33,7 +33,9 @@ public class PlayerSkills
         [Description("Nuclear Gun")]
         NuclearGun,
         [Description("Iron Skin")]
-        IronSkin
+        IronSkin,
+        [Description("Rage")]
+        Rage
     }
 
     List<SkillType> m_UnlockedSkillsList;
@@ -67,10 +69,10 @@ public class PlayerSkills
         switch (skill)
         {
             case SkillType.Propulsors:
-                descr = "Now you can jump higher than before";
+                descr = "Now your jumps are higher than before";
                 break;
             case SkillType.MagneticAccelerators:
-                descr = "Now you can move faster than before";
+                descr = "Now you move faster than before";
                 break;
             case SkillType.ExtendableArm:
                 descr = "Now you can use an extendable arm. Use it against enemies or with the environment\n\nPress Q to use the arm";
@@ -83,6 +85,9 @@ public class PlayerSkills
                 break;
             case SkillType.IronSkin:
                 descr = "Your maximum health is now increased";
+                break;
+            case SkillType.Rage:
+                descr = "Killing an enemy with a melee attack gives now a chance to restore some health";
                 break;
             default:
                 descr = "Undefined";

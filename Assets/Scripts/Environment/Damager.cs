@@ -19,7 +19,10 @@ public class Damager : MonoBehaviour
 
         if (player != null)
         {
-            m_AudioSource.PlayOneShot(damageClip);
+            if (damageClip != null)
+            {
+                m_AudioSource.PlayOneShot(damageClip);
+            }
             player.ChangeHealth(-damage);
         }
 
@@ -37,8 +40,11 @@ public class Damager : MonoBehaviour
 
         if (player != null)
         {
-            m_AudioSource.PlayOneShot(damageClip);
-            m_AudioSource.loop = true;
+            if (damageClip != null)
+            {
+                m_AudioSource.PlayOneShot(damageClip);
+                m_AudioSource.loop = true;
+            }
             player.ChangeHealth(-damage);
         }
         

@@ -12,6 +12,12 @@ public abstract class BaseEnemy : MonoBehaviour
     public ParticleSystem hurtEffect;
     public Transform rightBoundary;
     public Transform leftBoundary;
+    public float Health {
+        get
+        {
+            return m_Health;
+        }
+    }
     AudioSource m_AudioSource;
     [SerializeField] float m_Health;
     [SerializeField] protected float m_MovedTime;              //elapsed time moving in a direction
