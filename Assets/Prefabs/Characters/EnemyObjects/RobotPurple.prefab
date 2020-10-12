@@ -164,6 +164,11 @@ PrefabInstance:
       propertyPath: rightBoundary
       value: 
       objectReference: {fileID: 5464843718221838809}
+    - target: {fileID: 1595654383670781122, guid: 4e6ade2ea59565448b87e5edcecbf806,
+        type: 3}
+      propertyPath: respawnTime
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4503741310851528683, guid: 4e6ade2ea59565448b87e5edcecbf806,
         type: 3}
       propertyPath: m_Name

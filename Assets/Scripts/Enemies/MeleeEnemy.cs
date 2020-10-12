@@ -60,16 +60,7 @@ public class MeleeEnemy : BaseEnemy
 
     protected override void UpdateTimers()
     {
-        if (m_Poisoned)
-        {
-            m_PoisonedTime -= Time.deltaTime;
-            if (m_PoisonedTime < 0)
-            {
-                m_Poisoned = false;
-                m_StatsModifier = 1f;
-                m_PoisonTotalTime = 0f;
-            }
-        }
+        base.UpdateTimers();
 
         if (m_Cooling)
         {

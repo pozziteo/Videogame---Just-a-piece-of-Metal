@@ -6,7 +6,6 @@ public abstract class BaseEnemy : MonoBehaviour
 {
 
     public float moveSpeed;         //speed of the character
-    public float moveTimer;         //timer of moving in the same direction
     public float startHealth;
     public float enemyDamage;
     public ParticleSystem hurtEffect;
@@ -18,9 +17,10 @@ public abstract class BaseEnemy : MonoBehaviour
             return m_Health;
         }
     }
+
+    public float respawnTime;
     AudioSource m_AudioSource;
     [SerializeField] float m_Health;
-    [SerializeField] protected float m_MovedTime;              //elapsed time moving in a direction
     protected float m_PoisonedTime;
     protected float m_PoisonTotalTime;
     [SerializeField] protected float m_StatsModifier;
@@ -32,13 +32,17 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected bool m_Cooling;                 //cooling down from an attack
     [SerializeField] protected int m_LookDirection = 1;        //direction of movement
     protected Transform target;
+    Transform m_InitialPosition;
+    bool m_EnemyDead;
+    float m_DeathTimer;
+
 
     protected virtual void Awake()
     {
+        m_InitialPosition = gameObject.transform;
         m_Animator = GetComponent<Animator>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_AudioSource = GetComponent<AudioSource>();
-        m_MovedTime = moveTimer;
         m_Health = startHealth;
         m_StatsModifier = 1f;
         m_Animator.SetFloat("Look Direction", m_LookDirection);
@@ -52,10 +56,24 @@ public abstract class BaseEnemy : MonoBehaviour
         {
             SelectNextPatrolPoint();
         }
+
+
     }
 
     protected virtual void UpdateTimers()
     {
+        if (m_EnemyDead)
+        {
+            m_DeathTimer -= Time.deltaTime;
+            if (m_DeathTimer < 0)
+            {
+                gameObject.transform.position = m_InitialPosition.position;
+                gameObject.SetActive(true);
+                m_Health = startHealth;
+                m_EnemyDead = false;
+            }
+        }
+
         if (m_Poisoned)
         {
             m_PoisonedTime -= Time.deltaTime;
@@ -127,13 +145,20 @@ public abstract class BaseEnemy : MonoBehaviour
         Instantiate(hurtEffect, transform.position, Quaternion.identity);
         if (m_Health == 0)
         {
-            gameObject.SetActive(false);
+            Die();
         }
     }
 
     public void SetCaught(bool value)
     {
         m_Caught = value;
+    }
+
+    void Die()
+    {
+        m_EnemyDead = true;
+        m_DeathTimer = respawnTime;
+        gameObject.SetActive(false);
     }
 
     public void Poison(float statsModifier, float poisoningTime)

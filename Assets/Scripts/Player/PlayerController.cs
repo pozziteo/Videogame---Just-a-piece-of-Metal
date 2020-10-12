@@ -67,6 +67,17 @@ public class PlayerController : MonoBehaviour
             DontDestroyOnLoad(this);
             m_PlayerSkills = PlayerSkills.GetSkills();
             m_PlayerSkills.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
+
+            ///////////////////////  DEBUG INSTRUCTIONS ////////////////////////////////
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.ExtendableArm);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
+            ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
+
         }
         else
         {
@@ -271,6 +282,10 @@ public class PlayerController : MonoBehaviour
         else if (m_Rigidbody.velocity.y < 0)
         {
             m_Rigidbody.velocity += Vector2.up * Physics2D.gravity.y * fallJumpMultiplier * Time.fixedDeltaTime;
+            if (m_ArmBoost)
+            {
+                m_ArmBoost = false;
+            }
         }
     }
 
@@ -357,11 +372,6 @@ public class PlayerController : MonoBehaviour
         {
             m_IsGrounded = true;
             m_Animator.SetBool("Is Grounded", true);
-
-            if (m_ArmBoost)
-            {
-                m_ArmBoost = false;
-            }
 
             if (!m_FallingFromJetpack)
             {
@@ -516,7 +526,7 @@ public class PlayerController : MonoBehaviour
 
     void UseLongArm()
     {
-        if (CanUseExtendableArm() && !m_UsingLongArm)
+        if (CanUseExtendableArm() && !m_Animator.GetCurrentAnimatorStateInfo(0).IsName("LongArm"))
         {
             m_UsingLongArm = true;
             m_Animator.SetBool("Long Arm", true);
