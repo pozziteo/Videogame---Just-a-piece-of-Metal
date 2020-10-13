@@ -166,15 +166,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  moveTimer: 2
   startHealth: 2
   enemyDamage: 0.5
   hurtEffect: {fileID: 4723599629877341064, guid: 24532092c38379e498130d821749c30d,
     type: 3}
   rightBoundary: {fileID: 0}
   leftBoundary: {fileID: 0}
+  respawnTime: 30
   m_Health: 0
-  m_MovedTime: 0
   m_StatsModifier: 0
   m_Poisoned: 0
   m_PlayerInRange: 0

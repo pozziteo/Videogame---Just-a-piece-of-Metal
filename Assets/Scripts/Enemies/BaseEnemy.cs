@@ -17,7 +17,6 @@ public abstract class BaseEnemy : MonoBehaviour
             return m_Health;
         }
     }
-
     public float respawnTime;
     AudioSource m_AudioSource;
     [SerializeField] float m_Health;
@@ -32,9 +31,8 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected bool m_Cooling;                 //cooling down from an attack
     [SerializeField] protected int m_LookDirection = 1;        //direction of movement
     protected Transform target;
+    protected bool m_EnemyDead;
     Transform m_InitialPosition;
-    bool m_EnemyDead;
-    float m_DeathTimer;
 
 
     protected virtual void Awake()
@@ -62,18 +60,6 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void UpdateTimers()
     {
-        if (m_EnemyDead)
-        {
-            m_DeathTimer -= Time.deltaTime;
-            if (m_DeathTimer < 0)
-            {
-                gameObject.transform.position = m_InitialPosition.position;
-                gameObject.SetActive(true);
-                m_Health = startHealth;
-                m_EnemyDead = false;
-            }
-        }
-
         if (m_Poisoned)
         {
             m_PoisonedTime -= Time.deltaTime;
@@ -141,24 +127,34 @@ public abstract class BaseEnemy : MonoBehaviour
 
     public void ChangeHealth(float amount)
     {
-        m_Health = Mathf.Clamp(m_Health + amount, 0, startHealth);
-        Instantiate(hurtEffect, transform.position, Quaternion.identity);
-        if (m_Health == 0)
+        if (!m_EnemyDead)
         {
-            Die();
+            m_Health = Mathf.Clamp(m_Health + amount, 0, startHealth);
+            Instantiate(hurtEffect, transform.position, Quaternion.identity);
+            if (m_Health == 0)
+            {
+                gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                m_EnemyDead = true;
+                EnemySpawnerManager.Instance.AddDeadEnemy(this, respawnTime);
+            }
         }
+    }
+
+    public void Respawn()
+    {
+        gameObject.transform.position = m_InitialPosition.position;
+        m_LookDirection = 1;
+        m_Animator.SetFloat("Look Direction", m_LookDirection);
+        m_Health = startHealth;
+        m_EnemyDead = false;
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;
+
+        SelectNextPatrolPoint();
     }
 
     public void SetCaught(bool value)
     {
         m_Caught = value;
-    }
-
-    void Die()
-    {
-        m_EnemyDead = true;
-        m_DeathTimer = respawnTime;
-        gameObject.SetActive(false);
     }
 
     public void Poison(float statsModifier, float poisoningTime)

@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.ExtendableArm);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
-            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);

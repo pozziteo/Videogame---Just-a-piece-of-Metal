@@ -162,6 +162,10 @@ PrefabInstance:
       propertyPath: leftBoundary
       value: 
       objectReference: {fileID: 6163793686560485510}
+    - target: {fileID: 1545372334, guid: 41c2f1ed48349eb44baa872bfe414396, type: 3}
+      propertyPath: respawnTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4599697838161080928, guid: 41c2f1ed48349eb44baa872bfe414396,
         type: 3}
       propertyPath: m_LocalPosition.x
