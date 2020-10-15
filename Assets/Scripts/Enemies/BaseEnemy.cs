@@ -32,6 +32,7 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected int m_LookDirection = 1;        //direction of movement
     protected Transform target;
     protected bool m_EnemyDead;
+    protected bool m_IsFixedEnemy;
     Transform m_InitialPosition;
 
 
@@ -45,17 +46,23 @@ public abstract class BaseEnemy : MonoBehaviour
         m_StatsModifier = 1f;
         m_Animator.SetFloat("Look Direction", m_LookDirection);
 
+        if (leftBoundary == null || rightBoundary == null)
+        {
+            m_IsFixedEnemy = true;
+        }
+
         SelectNextPatrolPoint();
     }
 
     protected virtual void Update()
     {
-        if (!IsBetweenBoundaries() && !m_PlayerInRange && !m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
+        if (!m_IsFixedEnemy)
         {
-            SelectNextPatrolPoint();
+            if (!IsBetweenBoundaries() && !m_PlayerInRange && !m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
+            {
+                SelectNextPatrolPoint();
+            }
         }
-
-
     }
 
     protected virtual void UpdateTimers()
@@ -74,19 +81,22 @@ public abstract class BaseEnemy : MonoBehaviour
 
     void SelectNextPatrolPoint()
     {
-        float distanceToLeft = Vector2.Distance(transform.position, leftBoundary.position);
-        float distanceToRight = Vector2.Distance(transform.position, rightBoundary.position);
-
-        if (distanceToLeft > distanceToRight)
+        if (!m_IsFixedEnemy)
         {
-            target = leftBoundary;
-        }
-        else
-        {
-            target = rightBoundary;
-        }
+            float distanceToLeft = Vector2.Distance(transform.position, leftBoundary.position);
+            float distanceToRight = Vector2.Distance(transform.position, rightBoundary.position);
 
-        Flip();
+            if (distanceToLeft > distanceToRight)
+            {
+                target = leftBoundary;
+            }
+            else
+            {
+                target = rightBoundary;
+            }
+
+            Flip();
+        }
     }
 
     void Flip()
@@ -122,7 +132,10 @@ public abstract class BaseEnemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Flip();
+        if (other.gameObject.tag == "EnemyPatrol" || other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            Flip();
+        }
     }
 
     public void ChangeHealth(float amount)
@@ -134,6 +147,12 @@ public abstract class BaseEnemy : MonoBehaviour
             if (m_Health == 0)
             {
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
+                }
+
                 m_EnemyDead = true;
                 EnemySpawnerManager.Instance.AddDeadEnemy(this, respawnTime);
             }
@@ -148,6 +167,11 @@ public abstract class BaseEnemy : MonoBehaviour
         m_Health = startHealth;
         m_EnemyDead = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
+        foreach (Transform child in transform)
+        {   
+            child.gameObject.layer = LayerMask.NameToLayer("Enemy");
+        }
 
         SelectNextPatrolPoint();
     }

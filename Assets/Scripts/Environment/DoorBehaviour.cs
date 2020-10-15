@@ -120,27 +120,6 @@ public class DoorBehaviour : MonoBehaviour
 
     public void ChangeLevel()
     {
-        if (SceneManager.GetActiveScene().name != connectedScene)
-        {
-            m_DoorsManager.DisableSceneObjects(SceneManager.GetActiveScene().name);
-            m_DoorsManager.EnableNextSceneObjects(connectedScene);
-            SceneManager.LoadScene(connectedScene, LoadSceneMode.Single);
-            SceneManager.MoveGameObjectToScene(PlayerController.Player.gameObject, SceneManager.GetSceneByName(connectedScene));
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        else
-        {
-            DoorBehaviour otherDoor = m_DoorsManager.FindDoor(connectedDoor);
-            PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
-            PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
-        }
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        DoorBehaviour otherDoor = m_DoorsManager.FindDoor(connectedDoor);
-        PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
-        PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        GameManager.Instance.EnterDoor(connectedScene, connectedDoor);
     }
 }

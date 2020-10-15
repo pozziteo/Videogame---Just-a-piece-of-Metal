@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8830154966765210420}
   m_Layer: 0
   m_Name: LeftPatrolLimit
-  m_TagString: Untagged
+  m_TagString: EnemyPatrol
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 4749055138533465482}
   m_Layer: 0
   m_Name: RightPatrolLimit
-  m_TagString: Untagged
+  m_TagString: EnemyPatrol
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,10 +162,6 @@ PrefabInstance:
       propertyPath: leftBoundary
       value: 
       objectReference: {fileID: 6163793686560485510}
-    - target: {fileID: 1545372334, guid: 41c2f1ed48349eb44baa872bfe414396, type: 3}
-      propertyPath: respawnTime
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 4599697838161080928, guid: 41c2f1ed48349eb44baa872bfe414396,
         type: 3}
       propertyPath: m_LocalPosition.x

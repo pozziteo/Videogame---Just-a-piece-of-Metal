@@ -58,7 +58,7 @@ public class RangedEnemy : BaseEnemy
 
     void FixedUpdate()
     {
-        if (m_Caught || m_Cooling)
+        if (m_Caught || m_Cooling || m_IsFixedEnemy)
         {
             return;
         }

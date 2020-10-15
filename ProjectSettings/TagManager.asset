@@ -8,6 +8,8 @@ TagManager:
   - Foothold
   - Projectile
   - Melee
+  - EnemyScan
+  - EnemyPatrol
   layers:
   - Default
   - TransparentFX
@@ -26,7 +28,7 @@ TagManager:
   - CameraConfiner
   - Bomb
   - Wall
-  - 
+  - DeadEnemy
   - 
   - 
   - 

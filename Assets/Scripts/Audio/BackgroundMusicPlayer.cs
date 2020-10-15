@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class BackgroundMusicPlayer : MonoBehaviour
 {
+    static BackgroundMusicPlayer musicPlayer;
     public List<AudioClip> tracks;
     AudioSource m_AudioSource;
     static int CurrentIndexPlaying = 0;
 
     void Awake()
     {
-        DontDestroyOnLoad(this);
-        m_AudioSource = GetComponent<AudioSource>();
-        StartCoroutine(PlayList());
+        if (musicPlayer == null)
+        {
+            musicPlayer = this;
+            DontDestroyOnLoad(this);
+            m_AudioSource = GetComponent<AudioSource>();
+            StartCoroutine(PlayList());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator PlayList()

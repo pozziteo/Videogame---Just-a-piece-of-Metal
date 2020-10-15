@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
-            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
             ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
 
         }
@@ -121,6 +121,10 @@ public class PlayerController : MonoBehaviour
     
     void Update () 
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            return;
+        }
         //If player is dead, lock all input controls and stop the player, unless it is falling for gravity. 
         //When timer elapses, respawn
         if (m_IsDead)
@@ -379,7 +383,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log(normalizedVerticalVelocity);
                 if (normalizedVerticalVelocity > 20f)
                 {
-                    float fallDamage = normalizedVerticalVelocity * 0.04f;
+                    float fallDamage = normalizedVerticalVelocity * 0.06f;
                     if (Mathf.Abs(fallDamage - Mathf.Floor(fallDamage) - 0.5f) < 0.2f)
                     {
                         fallDamage = Mathf.Floor(fallDamage) + 0.5f;

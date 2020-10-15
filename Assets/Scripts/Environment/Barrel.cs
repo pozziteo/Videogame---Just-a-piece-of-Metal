@@ -53,6 +53,7 @@ public abstract class Barrel : MonoBehaviour
                     bar.Invoke("Explode", delayChainExplosion);                
                 }
             }
+            gameObject.GetComponent<AudioSource>().Play();
         }
     }
 

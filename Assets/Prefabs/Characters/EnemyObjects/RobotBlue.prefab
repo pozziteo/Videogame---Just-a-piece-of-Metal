@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8154701001370455798}
   m_Layer: 0
   m_Name: LeftPatrolLimit
-  m_TagString: Untagged
+  m_TagString: EnemyPatrol
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 2372570311741175167}
   m_Layer: 0
   m_Name: RightPatrolLimit
-  m_TagString: Untagged
+  m_TagString: EnemyPatrol
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,6 +159,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyRobotBlue
       objectReference: {fileID: 0}
+    - target: {fileID: 4842203742879000956, guid: 743549b769dfe444a98f32d5e97af7b8,
+        type: 3}
+      propertyPath: rightBoundary
+      value: 
+      objectReference: {fileID: 9045655413274577672}
+    - target: {fileID: 4842203742879000956, guid: 743549b769dfe444a98f32d5e97af7b8,
+        type: 3}
+      propertyPath: leftBoundary
+      value: 
+      objectReference: {fileID: 8711455748177001654}
     - target: {fileID: 6865209749648931489, guid: 743549b769dfe444a98f32d5e97af7b8,
         type: 3}
       propertyPath: m_LocalPosition.x

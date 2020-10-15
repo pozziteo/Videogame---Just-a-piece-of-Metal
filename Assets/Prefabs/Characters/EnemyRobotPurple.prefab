@@ -339,7 +339,7 @@ GameObject:
   - component: {fileID: 4903974036173931496}
   m_Layer: 11
   m_Name: PlayerDetection
-  m_TagString: Untagged
+  m_TagString: EnemyScan
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
