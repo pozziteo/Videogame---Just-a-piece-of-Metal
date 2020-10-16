@@ -167,7 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   startHealth: 3
-  enemyDamage: 2
+  enemyDamage: 1
   hurtEffect: {fileID: 4723599629877341064, guid: 7a6ce3a6cee59fc4e904df13e6c67598,
     type: 3}
   rightBoundary: {fileID: 0}
@@ -186,7 +186,7 @@ MonoBehaviour:
   bombPrefab: {fileID: 5863703201374663311, guid: 38cc9f4eb11082d4fb020bc6a1569eba,
     type: 3}
   projectileForce: 70
-  bombDamage: 3
+  bombDamage: 2
   canUseBombs: 1
   normalGunSound: {fileID: 8300000, guid: 9babdee5a79ffa14eb69951464145333, type: 3}
   bombSound: {fileID: 8300000, guid: 5c9c5b775d408e449acff71c99c6be3a, type: 3}

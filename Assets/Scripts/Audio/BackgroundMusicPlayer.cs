@@ -26,10 +26,13 @@ public class BackgroundMusicPlayer : MonoBehaviour
 
     IEnumerator PlayList()
     {
-        yield return new WaitForSeconds(tracks[CurrentIndexPlaying].length);
-        CurrentIndexPlaying = (CurrentIndexPlaying + 1) % tracks.Count;
-        m_AudioSource.clip = tracks[CurrentIndexPlaying];
-        m_AudioSource.Play();
+        while (true)
+        {
+            yield return new WaitForSeconds(tracks[CurrentIndexPlaying].length);
+            CurrentIndexPlaying = (CurrentIndexPlaying + 1) % tracks.Count;
+            m_AudioSource.clip = tracks[CurrentIndexPlaying];
+            m_AudioSource.Play();
+        }
     }
 
 

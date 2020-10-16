@@ -38,7 +38,6 @@ public class SkillManager
         {
             m_AllSkills.Add(unlocker);
             m_LevelManager.RegisterSkill(belongingScene, unlocker);
-            Debug.Log("Added new Skill unlocker: " + unlocker.skillUnlock.ToString());
         }
     }
 }

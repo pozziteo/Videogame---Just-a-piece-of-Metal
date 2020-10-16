@@ -310,7 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3.5
   startHealth: 3
-  enemyDamage: 1
+  enemyDamage: 1.5
   hurtEffect: {fileID: 4723599629877341064, guid: 7a6ce3a6cee59fc4e904df13e6c67598,
     type: 3}
   rightBoundary: {fileID: 0}

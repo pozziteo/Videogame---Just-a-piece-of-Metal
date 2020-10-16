@@ -36,7 +36,6 @@ public class SwitchManager
         {
             m_AllSwitches.Add(swit);
             m_LevelManager.RegisterSwitch(belongingScene, swit);
-            Debug.Log("Added new Switch: " + swit.switchID);
         }
     }
 }

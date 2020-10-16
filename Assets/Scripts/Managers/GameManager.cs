@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     
     static GameManager instance;
     public GameObject pauseGameObject;
+    CinemachineVirtualCamera mainCamera;
     GameObject m_PauseCanvas;
     bool m_GamePaused;
     bool m_GameStarted;
@@ -34,9 +36,12 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
+            mainCamera = GameObject.Find("Cameras").GetComponentInChildren<CinemachineVirtualCamera>();
         }
         else
-        Destroy(gameObject);
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -111,5 +116,6 @@ public class GameManager : MonoBehaviour
         DoorBehaviour otherDoor = DoorsManager.Instance.FindDoor(m_NextDoorLevel);
         PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
         PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
+        mainCamera.m_Follow = PlayerController.Player.gameObject.transform;
     }
 }

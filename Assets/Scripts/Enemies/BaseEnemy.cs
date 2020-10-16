@@ -147,6 +147,7 @@ public abstract class BaseEnemy : MonoBehaviour
             if (m_Health == 0)
             {
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                m_Animator.enabled = false;
                 gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
                 foreach (Transform child in transform)
                 {
@@ -163,6 +164,7 @@ public abstract class BaseEnemy : MonoBehaviour
     {
         gameObject.transform.position = m_InitialPosition.position;
         m_LookDirection = 1;
+        m_Animator.enabled = true;
         m_Animator.SetFloat("Look Direction", m_LookDirection);
         m_Health = startHealth;
         m_EnemyDead = false;

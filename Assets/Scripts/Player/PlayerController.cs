@@ -70,11 +70,11 @@ public class PlayerController : MonoBehaviour
 
             ///////////////////////  DEBUG INSTRUCTIONS ////////////////////////////////
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.ExtendableArm);
-            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
-            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
             ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
 
@@ -380,7 +380,7 @@ public class PlayerController : MonoBehaviour
             if (!m_FallingFromJetpack)
             {
                 float normalizedVerticalVelocity = collision.relativeVelocity.y * 0.85f;
-                Debug.Log(normalizedVerticalVelocity);
+                //Debug.Log(normalizedVerticalVelocity);
                 if (normalizedVerticalVelocity > 20f)
                 {
                     float fallDamage = normalizedVerticalVelocity * 0.06f;
