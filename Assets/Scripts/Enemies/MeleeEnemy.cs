@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MeleeEnemy : BaseEnemy
 {
+    public AudioClip meleeSound;
     public float runSpeed;
     public float attackDistance;
     public float meleeCooldown;
@@ -36,13 +37,21 @@ public class MeleeEnemy : BaseEnemy
 
         if (!m_PlayerInRange)
         {
+          
+            m_AudioSource.clip = m_BaseSound;
+            m_AudioSource.loop = true;
+            m_AudioSource.pitch = 1f;
+            if (!m_AudioSource.isPlaying)
+            {
+                m_AudioSource.Play();
+            }
             m_Animator.SetBool("Can Run", false);
             m_Animator.SetBool("Can Walk", true);
             m_RigidBody.velocity = (Vector2.right * moveSpeed * m_LookDirection  + Vector2.up * m_RigidBody.velocity.y) * m_StatsModifier;
         }
         else
         {
-            float distance = Vector2.Distance(target.position, transform.position);
+            float distance = Vector2.Distance(m_Target.position, transform.position);
             if (distance > attackDistance)
             {
                 m_Animator.SetBool("Can Run", true);
@@ -81,7 +90,7 @@ public class MeleeEnemy : BaseEnemy
             m_PlayerInRange = true;
             m_LookDirection = (int) Mathf.Sign(other.gameObject.transform.position.x - transform.position.x);
             m_Animator.SetFloat("Look Direction", m_LookDirection);
-            target = player.gameObject.transform;
+            m_Target = player.gameObject.transform;
         }
     }
 
@@ -99,7 +108,7 @@ public class MeleeEnemy : BaseEnemy
     {
         if (!m_Cooling)
         {
-            float distance = Vector2.Distance(transform.position, target.position);
+            float distance = Vector2.Distance(transform.position, m_Target.position);
 
             if (distance > attackDistance)
             {
@@ -118,6 +127,7 @@ public class MeleeEnemy : BaseEnemy
         m_MeleeTimer = meleeCooldown;
         m_Cooling = true;
         m_Animator.SetBool("Can Run", false);
+        m_AudioSource.Stop();
         m_Animator.SetTrigger("Melee");
     }
 
@@ -125,8 +135,18 @@ public class MeleeEnemy : BaseEnemy
     {
         if (!m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Melee"))
         {
-            Vector2 targetPos = new Vector2(target.position.x, transform.position.y);
+            if (!m_AudioSource.isPlaying)
+            {
+                m_AudioSource.Play();
+            }
+            m_AudioSource.pitch = 2f;
+            Vector2 targetPos = new Vector2(m_Target.position.x, transform.position.y);
             transform.position = Vector2.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime * m_StatsModifier);
         }
+    }
+
+    void PlayMeleeSound()
+    {
+        m_AudioSource.PlayOneShot(meleeSound);
     }
 }

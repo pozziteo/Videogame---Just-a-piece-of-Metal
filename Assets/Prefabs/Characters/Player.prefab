@@ -318,6 +318,7 @@ MonoBehaviour:
     type: 3}
   simpleGunSound: {fileID: 8300000, guid: b91c1d0066de57946a355e9e4e621e7b, type: 3}
   nuclearGunSound: {fileID: 8300000, guid: a4e2fede609bb1748a039843f72dfce5, type: 3}
+  meleeSound: {fileID: 8300000, guid: 75436f5a42f570b4c88b2e319328d2d5, type: 3}
   damageSounds:
   - {fileID: 8300000, guid: 722bcc55c78977840ae1cf7b657c0c12, type: 3}
   - {fileID: 8300000, guid: 788a2268e5cd2c14993e0c80c8b3bb0c, type: 3}

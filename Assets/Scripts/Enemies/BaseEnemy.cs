@@ -18,7 +18,8 @@ public abstract class BaseEnemy : MonoBehaviour
         }
     }
     public float respawnTime;
-    AudioSource m_AudioSource;
+    public AudioClip m_BaseSound;
+    protected AudioSource m_AudioSource;
     [SerializeField] float m_Health;
     protected float m_PoisonedTime;
     protected float m_PoisonTotalTime;
@@ -30,7 +31,7 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected bool m_Caught;              //enemy has been caught by the player's long arm
     [SerializeField] protected bool m_Cooling;                 //cooling down from an attack
     [SerializeField] protected int m_LookDirection = 1;        //direction of movement
-    protected Transform target;
+    protected Transform m_Target;
     protected bool m_EnemyDead;
     protected bool m_IsFixedEnemy;
     Transform m_InitialPosition;
@@ -88,11 +89,11 @@ public abstract class BaseEnemy : MonoBehaviour
 
             if (distanceToLeft > distanceToRight)
             {
-                target = leftBoundary;
+                m_Target = leftBoundary;
             }
             else
             {
-                target = rightBoundary;
+                m_Target = rightBoundary;
             }
 
             Flip();
@@ -101,7 +102,7 @@ public abstract class BaseEnemy : MonoBehaviour
 
     void Flip()
     {
-        if (transform.position.x > target.position.x)
+        if (transform.position.x > m_Target.position.x)
         {
             m_LookDirection = -1;
         }
@@ -148,6 +149,7 @@ public abstract class BaseEnemy : MonoBehaviour
             {
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
                 m_Animator.enabled = false;
+                m_AudioSource.enabled = false;
                 gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
                 foreach (Transform child in transform)
                 {
@@ -169,6 +171,7 @@ public abstract class BaseEnemy : MonoBehaviour
         m_Health = startHealth;
         m_EnemyDead = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        m_AudioSource.enabled = true;
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         foreach (Transform child in transform)
         {   

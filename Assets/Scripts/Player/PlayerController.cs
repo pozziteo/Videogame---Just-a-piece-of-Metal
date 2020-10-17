@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Player;
+    public static PlayerController Player
+    {
+        get
+        {
+            return player;
+        }
+    }
     public static float MoveSpeed = 5f;        //Horizontal speed of the player
     public static float JumpSpeed = 9f;      //Vertical speed when player jumps
     public static float MaxHealth = 5f;              //Max health of the player
     public static float shootDamage = 1f;           //Damage to health from shooting
     public static float m_MaxJetpackFuel = 0f;
+    static PlayerController player;
     public float projectileForce;
     public float fallJumpMultiplier;    //Coefficient of boost to gravity when falling down
     public float timeInvincible;        //Time interval in which player is invincible after being hit
@@ -63,18 +70,18 @@ public class PlayerController : MonoBehaviour
     {
         if (Player == null)
         {
-            Player = this;
+            player = this;
             DontDestroyOnLoad(this);
             m_PlayerSkills = PlayerSkills.GetSkills();
             m_PlayerSkills.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
 
             ///////////////////////  DEBUG INSTRUCTIONS ////////////////////////////////
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.ExtendableArm);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
             ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
 
@@ -309,7 +316,6 @@ public class PlayerController : MonoBehaviour
             {
                 m_IsCooling = false;
                 m_Animator.SetBool("Shoot", false);
-                m_Animator.SetBool("Melee", false);
             }
         }
 
@@ -428,7 +434,6 @@ public class PlayerController : MonoBehaviour
             }
 
         m_CurrentHealth = Mathf.Clamp(m_CurrentHealth + amount, 0, MaxHealth);
-        Debug.Log("Health: " + m_CurrentHealth);
         HealthBar.instance.SetValue(m_CurrentHealth / MaxHealth);
         if (m_CurrentHealth == 0)
         {
@@ -482,7 +487,7 @@ public class PlayerController : MonoBehaviour
         }
 
         m_AttackTimer = attackCooldown;
-        m_Animator.SetBool("Melee", true);
+        m_Animator.SetTrigger("Melee");
         m_IsCooling = true;
     }
 
@@ -590,6 +595,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Random.value >= 0.5f)
             {
+                Debug.Log("Health recovered!");
                 float recoveredHealth = Random.Range(0f, maxRecoverableHealth / 1.5f);
                     if (Mathf.Abs(recoveredHealth - Mathf.Floor(recoveredHealth) - 0.5f) < 0.2f)
                     {
@@ -599,7 +605,7 @@ public class PlayerController : MonoBehaviour
                     {
                         recoveredHealth = Mathf.Round(recoveredHealth);
                     }
-
+                    Debug.Log("Amount recovered health: " + recoveredHealth);
                     ChangeHealth(recoveredHealth);
             }
         }
@@ -649,7 +655,7 @@ public class PlayerController : MonoBehaviour
     void SetIronSkin(float modifier)
     {
         MaxHealth = modifier * MaxHealth;
-        m_CurrentHealth = MaxHealth;
+        ChangeHealth(MaxHealth);
     }
 
     bool CanUseExtendableArm()
@@ -666,8 +672,7 @@ public class PlayerController : MonoBehaviour
     {
         return m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Rage);
     }
-    
-    public void PlaySound(AudioClip clip)
+    void PlaySound(AudioClip clip)
     {
         m_AudioSource.PlayOneShot(clip);
     }

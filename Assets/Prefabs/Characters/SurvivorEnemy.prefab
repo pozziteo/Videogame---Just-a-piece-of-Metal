@@ -173,6 +173,7 @@ MonoBehaviour:
   rightBoundary: {fileID: 0}
   leftBoundary: {fileID: 0}
   respawnTime: 30
+  m_BaseSound: {fileID: 8300000, guid: 6154a96a42977d646a10ca4c208e90e1, type: 3}
   m_Health: 0
   m_StatsModifier: 0
   m_Poisoned: 0
@@ -204,15 +205,15 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.4
+  m_Volume: 0.9
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 77
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 10
   MaxDistance: 20
   Pan2D: 0
   rolloffMode: 0
@@ -248,7 +249,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -263,7 +264,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.6666667
       inSlope: 0
       outSlope: 0
       tangentMode: 0
