@@ -78,7 +78,7 @@ public class PlayerSkills
                 descr = "Now you can use an extendable arm. Use it against enemies or with the environment\n\nPress Q to use the arm";
                 break;
             case SkillType.Jetpack:
-                descr = "Now you can use a jetpack when you are in air. Hold SPACE to use it";
+                descr = "Now you can use a jetpack when you are in air. Hold SHIFT to use it";
                 break;
             case SkillType.NuclearGun:
                 descr = "Now your projectiles are more powerful";

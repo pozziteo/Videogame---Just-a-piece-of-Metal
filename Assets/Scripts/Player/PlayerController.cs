@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
-            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
             ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
 
@@ -234,12 +234,12 @@ public class PlayerController : MonoBehaviour
             UseLongArm();
         }
 
-        if (Input.GetKey(KeyCode.Space) && !m_IsGrounded)
+        if (Input.GetKey(KeyCode.LeftShift) && !m_IsGrounded)
         {
             UseJetpack();
         }
 
-        if (m_UsingJetpack && Input.GetKeyUp(KeyCode.Space))
+        if (m_UsingJetpack && Input.GetKeyUp(KeyCode.LeftShift))
         {
             TurnOffJetpack();
         }
