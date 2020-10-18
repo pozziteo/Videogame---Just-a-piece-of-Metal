@@ -30,9 +30,12 @@ public class EnemySpawnerManager : MonoBehaviour
 
     public void AddDeadEnemy(BaseEnemy enemy, float timeRespawn)
     {
-        m_EnemyToRespawn.Add(enemy);
-        enemy.enabled = false;
-        StartCoroutine(RunTimer(enemy, timeRespawn));
+        if (m_EnemyToRespawn.Find(en => en == enemy) == null)
+        {
+            m_EnemyToRespawn.Add(enemy);
+            enemy.enabled = false;
+            StartCoroutine(RunTimer(enemy, timeRespawn));
+        }
     }
 
     void RespawnEnemy(BaseEnemy enemy)

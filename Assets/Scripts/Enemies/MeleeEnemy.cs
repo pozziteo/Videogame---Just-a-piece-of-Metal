@@ -41,7 +41,7 @@ public class MeleeEnemy : BaseEnemy
             m_AudioSource.clip = m_BaseSound;
             m_AudioSource.loop = true;
             m_AudioSource.pitch = 1f;
-            if (!m_AudioSource.isPlaying)
+            if (!m_AudioSource.isPlaying && !m_EnemyDead)
             {
                 m_AudioSource.Play();
             }

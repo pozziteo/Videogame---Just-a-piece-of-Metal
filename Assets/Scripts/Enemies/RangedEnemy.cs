@@ -65,7 +65,7 @@ public class RangedEnemy : BaseEnemy
 
         if (!m_PlayerInRange)
         {
-            if (!m_AudioSource.isPlaying)
+            if (!m_AudioSource.isPlaying && !m_EnemyDead) 
             {
                 m_AudioSource.clip = m_BaseSound;
                 m_AudioSource.loop = true;

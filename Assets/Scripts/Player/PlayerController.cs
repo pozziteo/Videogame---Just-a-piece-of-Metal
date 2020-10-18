@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public float attackCooldown;        //Time interval to wait for attacking again
     public float longArmInterval;       //Time interval for long arm animation
     public float armBoostForce;
+    public GameObject jetpackCanvas;
     public GameObject usedProjectilePrefab;     //Currently used projectile sprite 
     public GameObject nuclearGunProjectile;     //Projectile prefab of the skill NuclearGun
     public ParticleSystem shootEffect;      //Particle system when shooting
@@ -94,6 +95,7 @@ public class PlayerController : MonoBehaviour
 
     void Start () 
     {
+        m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
         m_Rigidbody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
@@ -315,7 +317,6 @@ public class PlayerController : MonoBehaviour
             if (m_AttackTimer < 0)
             {
                 m_IsCooling = false;
-                m_Animator.SetBool("Shoot", false);
             }
         }
 
@@ -345,7 +346,7 @@ public class PlayerController : MonoBehaviour
         if (m_UsingJetpack)
         {
             m_CurrentJetpackFuel -= Time.deltaTime;
-            
+            JetpackBar.instance.SetValue(m_CurrentJetpackFuel / m_MaxJetpackFuel);
             if (m_CurrentJetpackFuel < 0)
             {
                 m_UsingJetpack = false;
@@ -358,7 +359,7 @@ public class PlayerController : MonoBehaviour
         else if (m_IsGrounded && m_CurrentJetpackFuel < m_MaxJetpackFuel)
         {
             m_CurrentJetpackFuel += Time.deltaTime;
-
+            JetpackBar.instance.SetValue(m_CurrentJetpackFuel / m_MaxJetpackFuel);
             if (m_CurrentJetpackFuel > m_MaxJetpackFuel)
             {
                 m_CurrentJetpackFuel = m_MaxJetpackFuel;
@@ -398,7 +399,7 @@ public class PlayerController : MonoBehaviour
                     {
                         fallDamage = Mathf.Round(fallDamage);
                     }
-
+                    Debug.Log("Fall damage: " + fallDamage);
                     ChangeHealth(-fallDamage);
                 }
             }
@@ -499,7 +500,7 @@ public class PlayerController : MonoBehaviour
         }
 
         m_AttackTimer = attackCooldown;
-        m_Animator.SetBool("Shoot", true);
+        m_Animator.SetTrigger("Shoot");
         m_IsCooling = true;
 
         Vector2 playerPos = m_Rigidbody.transform.position;
@@ -641,6 +642,7 @@ public class PlayerController : MonoBehaviour
 
     void SetJetpackParams(float fuel, float jetpackBoost)
     {
+        Instantiate(jetpackCanvas, Vector3.zero, Quaternion.identity);
         m_MaxJetpackFuel = fuel;
         m_CurrentJetpackFuel = m_MaxJetpackFuel;
         m_JetpackBoostVelocity = jetpackBoost;

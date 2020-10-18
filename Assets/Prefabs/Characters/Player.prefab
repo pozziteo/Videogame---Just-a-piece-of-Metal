@@ -308,6 +308,8 @@ MonoBehaviour:
   attackCooldown: 0.5
   longArmInterval: 3
   armBoostForce: 22
+  jetpackCanvas: {fileID: 7391109688633135910, guid: c71caf5d077de22459d8973027dc76f3,
+    type: 3}
   usedProjectilePrefab: {fileID: 1592030914768636557, guid: e338fb8afdba76b468ba1ca4ab4fe4f5,
     type: 3}
   nuclearGunProjectile: {fileID: 4289186542350693321, guid: 98b782b4d746c2b43b3ae51462179f51,

@@ -11,7 +11,7 @@ public abstract class Barrel : MonoBehaviour
     [SerializeField] bool m_Exploded;
     [SerializeField] float m_ElapsedDuration;
     float m_ExplosionRadius;
-    float m_RadiusMultiplier = 1.3f;
+    float m_RadiusMultiplier = 1.4f;
 
 
     protected virtual void Start()
