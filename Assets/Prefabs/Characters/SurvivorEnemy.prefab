@@ -173,7 +173,7 @@ MonoBehaviour:
   rightBoundary: {fileID: 0}
   leftBoundary: {fileID: 0}
   respawnTime: 30
-  m_BaseSound: {fileID: 8300000, guid: 6154a96a42977d646a10ca4c208e90e1, type: 3}
+  m_BaseSound: {fileID: 8300000, guid: 59e2e8084a3c34b23bc56ca7c2195ec6, type: 3}
   m_Health: 0
   m_StatsModifier: 0
   m_Poisoned: 0

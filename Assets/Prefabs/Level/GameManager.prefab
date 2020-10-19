@@ -45,3 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseGameObject: {fileID: 9000360538657427155, guid: 1570214c16046cd4bb0c35a6582c8ec9,
     type: 3}
+  alarmObject: {fileID: 8369676473508914023, guid: 524a9957347fbd64ab8d253be448ae54,
+    type: 3}

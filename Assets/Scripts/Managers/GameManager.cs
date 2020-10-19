@@ -23,10 +23,13 @@ public class GameManager : MonoBehaviour
     
     static GameManager instance;
     public GameObject pauseGameObject;
+    public GameObject alarmObject;
     CinemachineVirtualCamera mainCamera;
     GameObject m_PauseCanvas;
+    GameObject m_Alarm;
     bool m_GamePaused;
     bool m_GameStarted;
+    bool m_AlarmPlaying;
     string m_NextDoorLevel;
 
     void Awake()
@@ -117,5 +120,14 @@ public class GameManager : MonoBehaviour
         PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
         PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
         mainCamera.m_Follow = PlayerController.Player.gameObject.transform;
+    }
+
+    public void TurnOnAlarm()
+    {
+        if (!m_AlarmPlaying && PlayerSkills.GetSkills().IsSkillUnlocked(PlayerSkills.SkillType.Jetpack))
+        {
+            m_Alarm = Instantiate(alarmObject, Vector3.zero, Quaternion.identity);
+            m_AlarmPlaying = true;
+        }
     }
 }

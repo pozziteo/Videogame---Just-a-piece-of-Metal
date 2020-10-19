@@ -11,7 +11,6 @@ public class PlayerSkills
     public class OnSkillUnlockedEventArgs : EventArgs {
         public SkillType skillType;
     }
-
     static PlayerSkills instance;
     public float propulsorsNewSpeed = 13f;
     public float acceleratorsNewSpeed = 7f;
