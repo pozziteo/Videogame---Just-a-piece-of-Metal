@@ -484,6 +484,7 @@ public class PlayerController : MonoBehaviour
         m_IsDead = true;
         m_Animator.SetTrigger("Die");
         TurnOffJetpack();
+        GameManager.Instance.AddPlayerDeath();
     }
 
     void Melee()

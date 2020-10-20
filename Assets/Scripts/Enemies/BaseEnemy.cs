@@ -174,6 +174,8 @@ public abstract class BaseEnemy : MonoBehaviour
                 {
                     FinalArena.KillEnemy(gameObject);
                 }
+
+                GameManager.Instance.AddEnemyKill();
             }
         }
     }

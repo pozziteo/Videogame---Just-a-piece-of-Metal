@@ -47,3 +47,8 @@ MonoBehaviour:
     type: 3}
   alarmObject: {fileID: 8369676473508914023, guid: 524a9957347fbd64ab8d253be448ae54,
     type: 3}
+  finalText: {fileID: 7981602069839754109, guid: 0c8f5d93bc1b4044da751e67388814ce,
+    type: 3}
+  gameStatisticsCanvas: {fileID: 6381434567587761783, guid: 41888d858604d824bb4771db8ffc4989,
+    type: 3}
+  timeShowMessage: 4
