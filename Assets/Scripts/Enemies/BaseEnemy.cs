@@ -19,6 +19,7 @@ public abstract class BaseEnemy : MonoBehaviour
     }
     public float respawnTime;
     public AudioClip m_BaseSound;
+    public bool finalArenaEnemy;
     protected AudioSource m_AudioSource;
     [SerializeField] float m_Health;
     protected float m_PoisonedTime;
@@ -84,16 +85,23 @@ public abstract class BaseEnemy : MonoBehaviour
     {
         if (!m_IsFixedEnemy)
         {
-            float distanceToLeft = Vector2.Distance(transform.position, leftBoundary.position);
-            float distanceToRight = Vector2.Distance(transform.position, rightBoundary.position);
-
-            if (distanceToLeft > distanceToRight)
+            if (!finalArenaEnemy)
             {
-                m_Target = leftBoundary;
+                float distanceToLeft = Vector2.Distance(transform.position, leftBoundary.position);
+                float distanceToRight = Vector2.Distance(transform.position, rightBoundary.position);
+
+                if (distanceToLeft > distanceToRight)
+                {
+                    m_Target = leftBoundary;
+                }
+                else
+                {
+                    m_Target = rightBoundary;
+                }
             }
             else
             {
-                m_Target = rightBoundary;
+                m_Target = PlayerController.Player.gameObject.transform;
             }
 
             Flip();
@@ -157,7 +165,15 @@ public abstract class BaseEnemy : MonoBehaviour
                 }
 
                 m_EnemyDead = true;
-                EnemySpawnerManager.Instance.AddDeadEnemy(this, respawnTime);
+                
+                if (!finalArenaEnemy)
+                {
+                    EnemySpawnerManager.Instance.AddDeadEnemy(this, respawnTime);
+                }
+                else
+                {
+                    FinalArena.KillEnemy(gameObject);
+                }
             }
         }
     }
@@ -165,6 +181,11 @@ public abstract class BaseEnemy : MonoBehaviour
     public void Respawn()
     {
         gameObject.transform.position = m_InitialPosition.position;
+        ResetParameters();
+    }
+
+    void ResetParameters()
+    {
         m_LookDirection = 1;
         m_Animator.enabled = true;
         m_Animator.SetFloat("Look Direction", m_LookDirection);

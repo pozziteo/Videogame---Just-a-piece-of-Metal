@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     }
     public static float MoveSpeed = 5f;        //Horizontal speed of the player
     public static float JumpSpeed = 9f;      //Vertical speed when player jumps
-    public static float MaxHealth = 5f;              //Max health of the player
+    public static float MaxHealth = 8f;              //Max health of the player
     public static float shootDamage = 1f;           //Damage to health from shooting
     public static float m_MaxJetpackFuel = 0f;
     static PlayerController player;
@@ -34,6 +34,12 @@ public class PlayerController : MonoBehaviour
     public AudioClip simpleGunSound;
     public AudioClip nuclearGunSound;
     public List<AudioClip> damageSounds;
+    public bool IsDead {
+        get
+        {
+            return m_IsDead;
+        }
+    }
     AudioSource m_AudioSource;
     Vector2 m_LookDirection = new Vector2(1,0);       //Look direction of the player
     Vector2 m_PlayerInput;              //Input movement
@@ -81,7 +87,7 @@ public class PlayerController : MonoBehaviour
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
-            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
+            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
             m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
             ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
@@ -119,7 +125,7 @@ public class PlayerController : MonoBehaviour
                 break;
 
             case PlayerSkills.SkillType.NuclearGun:
-                SetNuclearGun(m_PlayerSkills.nuclearGunDamage);
+                SetNuclearGun(m_PlayerSkills.nuclearGunDamage, m_PlayerSkills.nuclearGunProjectileForce);
                 break;
 
             case PlayerSkills.SkillType.IronSkin:
@@ -648,9 +654,10 @@ public class PlayerController : MonoBehaviour
         m_JetpackBoostVelocity = jetpackBoost;
     }
 
-    void SetNuclearGun(float newDamage)
+    void SetNuclearGun(float newDamage, float newProjectileForce)
     {
         shootDamage = newDamage;
+        projectileForce = newProjectileForce;
         usedProjectilePrefab = nuclearGunProjectile;
     }
 

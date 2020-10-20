@@ -299,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef8c1a3901c48b44892fca730192b14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileForce: 50
+  projectileForce: 55
   fallJumpMultiplier: 0.75
   timeInvincible: 2
   blinkingHitTime: 2

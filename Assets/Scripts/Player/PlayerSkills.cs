@@ -17,6 +17,7 @@ public class PlayerSkills
     public float jetpackBoostVelocity = 15f;
     public float standardMaxJetpackFuel = 4f;
     public float nuclearGunDamage = 3f;
+    public float nuclearGunProjectileForce = 75f;
     public float ironSkinModifier = 2f;
 
     public enum SkillType {
