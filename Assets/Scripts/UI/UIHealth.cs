@@ -25,8 +25,20 @@ public class UIHealth : MonoBehaviour
         }
     }
 
+    public void ShowRageMessage()
+    {
+        StartCoroutine(ShowMessage());
+    }
+
     public void DestroyUI()
     {
         Destroy(gameObject);
+    }
+
+    IEnumerator ShowMessage()
+    {
+        gameObject.transform.Find("BonusHealthText").gameObject.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        gameObject.transform.Find("BonusHealthText").gameObject.SetActive(false);
     }
 }

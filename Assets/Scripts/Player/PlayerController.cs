@@ -624,6 +624,7 @@ public class PlayerController : MonoBehaviour
                     }
                     Debug.Log("Amount recovered health: " + recoveredHealth);
                     ChangeHealth(recoveredHealth);
+                    UIHealth.Instance.ShowRageMessage();
             }
         }
     }
