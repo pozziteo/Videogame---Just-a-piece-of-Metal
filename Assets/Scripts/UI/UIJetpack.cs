@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class UIJetpack : MonoBehaviour
 {
+    public static UIJetpack Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
     static UIJetpack instance;
     void Awake()
     {
@@ -16,5 +23,10 @@ public class UIJetpack : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void DestroyUI()
+    {
+        Destroy(gameObject);
     }
 }

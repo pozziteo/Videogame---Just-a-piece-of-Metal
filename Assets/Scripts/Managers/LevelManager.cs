@@ -159,4 +159,15 @@ public class LevelManager
         }
     }
 
+    public void DestroyAllPersistentObjects()
+    {
+        DoorsManager.Instance.DestroyDoors();
+        doorsInScene.Clear();
+
+        SwitchManager.Instance.DestroySwitches();
+        switchInScene.Clear();
+
+        SkillManager.Instance.DestroySkills();
+        skillsInScene.Clear();
+    }
 }

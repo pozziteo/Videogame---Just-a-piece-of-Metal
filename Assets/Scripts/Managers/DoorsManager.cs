@@ -51,5 +51,13 @@ public class DoorsManager
         m_LevelManager.EnablePersistentObjects(nextScene);
     }
 
-
+    public void DestroyDoors()
+    {
+        while (m_AllDoors.Count != 0)
+        {
+            DoorBehaviour door = m_AllDoors[0];
+            m_AllDoors.Remove(door);
+            door.DestroyDoor();
+        }
+    }
 }

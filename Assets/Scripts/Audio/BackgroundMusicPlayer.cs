@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class BackgroundMusicPlayer : MonoBehaviour
 {
+    public static BackgroundMusicPlayer MusicPlayer
+    {
+        get
+        {
+            return musicPlayer;
+        }
+    }
     static BackgroundMusicPlayer musicPlayer;
     public List<AudioClip> tracks;
     AudioSource m_AudioSource;

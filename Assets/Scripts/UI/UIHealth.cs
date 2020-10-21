@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class UIHealth : MonoBehaviour
 {
+    public static UIHealth Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
     static UIHealth instance;
     void Awake()
     {
@@ -16,5 +23,10 @@ public class UIHealth : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void DestroyUI()
+    {
+        Destroy(gameObject);
     }
 }

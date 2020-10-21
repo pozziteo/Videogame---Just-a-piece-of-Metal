@@ -119,4 +119,9 @@ public class SkillUnlocker : MonoBehaviour
             }
         }
     }
+
+    public void DestroySkill()
+    {
+        Destroy(gameObject);
+    }
 }

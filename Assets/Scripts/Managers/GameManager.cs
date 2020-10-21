@@ -96,8 +96,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        Debug.Log("Quitting");
-                        Application.Quit();
+                        ReturnToMenu();
                     }
                 }
             }
@@ -159,6 +158,8 @@ public class GameManager : MonoBehaviour
         else
         {
             m_EndGame = true;
+            m_AlarmPlaying = false;
+            Destroy(m_Alarm);
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += EndGame;
             SceneManager.LoadScene(nextScene, LoadSceneMode.Single);
@@ -198,7 +199,11 @@ public class GameManager : MonoBehaviour
         m_ActiveFinalCanvas = finalTextCanvas.GetComponent<CanvasGroup>();
         m_ActiveFinalCanvas.alpha = 0f;
 
+        StartCoroutine(DestroyAllObjects());
+
         m_ShowFinalText = true;
+
+        SceneManager.sceneLoaded -= EndGame;
     }
 
     void ShowFinalext()
@@ -263,5 +268,27 @@ public class GameManager : MonoBehaviour
         {
             m_WaitForInput = true;
         }
+    }
+
+    void ReturnToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Destroy(BackgroundMusicPlayer.MusicPlayer.gameObject);
+        Destroy(gameObject);
+    }
+
+    public void ReturnToMenu(PauseMenu fromPause)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        StartCoroutine(DestroyAllObjects());
+        ReturnToMenu();
+    }
+
+    IEnumerator DestroyAllObjects()
+    {
+        LevelManager.Instance.DestroyAllPersistentObjects();
+        PlayerController.Player.DestroyPlayer();
+        EnemySpawnerManager.Instance.DestroyManager();
+        yield return null;
     }
 }

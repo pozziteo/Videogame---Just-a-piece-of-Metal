@@ -38,4 +38,14 @@ public class SwitchManager
             m_LevelManager.RegisterSwitch(belongingScene, swit);
         }
     }
+
+    public void DestroySwitches()
+    {
+        while (m_AllSwitches.Count != 0)
+        {
+            SwitchBehaviour swit = m_AllSwitches[0];
+            m_AllSwitches.Remove(swit);
+            swit.DestroySwitch();
+        }
+    }
 }

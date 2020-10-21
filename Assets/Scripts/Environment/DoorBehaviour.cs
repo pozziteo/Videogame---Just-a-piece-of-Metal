@@ -122,4 +122,9 @@ public class DoorBehaviour : MonoBehaviour
     {
         GameManager.Instance.EnterDoor(connectedScene, connectedDoor);
     }
+
+    public void DestroyDoor()
+    {
+        Destroy(gameObject);
+    }
 }

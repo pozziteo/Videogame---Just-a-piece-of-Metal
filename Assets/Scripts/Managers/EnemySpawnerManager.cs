@@ -49,6 +49,11 @@ public class EnemySpawnerManager : MonoBehaviour
         }
     }
 
+    public void DestroyManager()
+    {
+        Destroy(gameObject);
+    }
+
     IEnumerator RunTimer(BaseEnemy enemy, float timeRespawn)
     {
         yield return new WaitForSeconds(timeRespawn);

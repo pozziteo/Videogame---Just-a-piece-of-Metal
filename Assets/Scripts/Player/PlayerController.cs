@@ -15,9 +15,10 @@ public class PlayerController : MonoBehaviour
     public static float JumpSpeed = 9f;      //Vertical speed when player jumps
     public static float MaxHealth = 8f;              //Max health of the player
     public static float shootDamage = 1f;           //Damage to health from shooting
-    public static float m_MaxJetpackFuel = 0f;
+    public static float maxJetpackFuel = 0f;
+    public static float projectileForce = 55f;
+    public static GameObject usedProjectile;
     static PlayerController player;
-    public float projectileForce;
     public float fallJumpMultiplier;    //Coefficient of boost to gravity when falling down
     public float timeInvincible;        //Time interval in which player is invincible after being hit
     public float blinkingHitTime;       //Blinking animation time after being hit
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public float longArmInterval;       //Time interval for long arm animation
     public float armBoostForce;
     public GameObject jetpackCanvas;
-    public GameObject usedProjectilePrefab;     //Currently used projectile sprite 
+    public GameObject baseProjectilePrefab;     //base projectile sprite 
     public GameObject nuclearGunProjectile;     //Projectile prefab of the skill NuclearGun
     public ParticleSystem shootEffect;      //Particle system when shooting
     public ParticleSystem jetpackEffect;    //Particle system when using jetpack
@@ -83,15 +84,23 @@ public class PlayerController : MonoBehaviour
             m_PlayerSkills.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
 
             ///////////////////////  DEBUG INSTRUCTIONS ////////////////////////////////
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.ExtendableArm);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.ExtendableArm);
             //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
-            m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Jetpack);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.MagneticAccelerators);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.NuclearGun);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Propulsors);
+            //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.Rage);
             ///////////////////////  END DEBUG INSTRUCTIONS /////////////////////////////////
 
+            if (m_PlayerSkills.IsSkillUnlocked(PlayerSkills.SkillType.NuclearGun))
+            {
+                usedProjectile = nuclearGunProjectile;
+            }
+            else
+            {
+                usedProjectile = baseProjectilePrefab;
+            }
         }
         else
         {
@@ -101,7 +110,7 @@ public class PlayerController : MonoBehaviour
 
     void Start () 
     {
-        m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
+        //m_PlayerSkills.UnlockSkill(PlayerSkills.SkillType.IronSkin);
         m_Rigidbody = GetComponent<Rigidbody2D> ();
         m_Animator = GetComponent<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
@@ -352,7 +361,7 @@ public class PlayerController : MonoBehaviour
         if (m_UsingJetpack)
         {
             m_CurrentJetpackFuel -= Time.deltaTime;
-            JetpackBar.instance.SetValue(m_CurrentJetpackFuel / m_MaxJetpackFuel);
+            JetpackBar.instance.SetValue(m_CurrentJetpackFuel / maxJetpackFuel);
             if (m_CurrentJetpackFuel < 0)
             {
                 m_UsingJetpack = false;
@@ -362,13 +371,13 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        else if (m_IsGrounded && m_CurrentJetpackFuel < m_MaxJetpackFuel)
+        else if (m_IsGrounded && m_CurrentJetpackFuel < maxJetpackFuel)
         {
             m_CurrentJetpackFuel += Time.deltaTime;
-            JetpackBar.instance.SetValue(m_CurrentJetpackFuel / m_MaxJetpackFuel);
-            if (m_CurrentJetpackFuel > m_MaxJetpackFuel)
+            JetpackBar.instance.SetValue(m_CurrentJetpackFuel / maxJetpackFuel);
+            if (m_CurrentJetpackFuel > maxJetpackFuel)
             {
-                m_CurrentJetpackFuel = m_MaxJetpackFuel;
+                m_CurrentJetpackFuel = maxJetpackFuel;
             }
         }
     }
@@ -524,7 +533,7 @@ public class PlayerController : MonoBehaviour
         Instantiate(shootEffect, playerPos + Vector2.up * 0.13f + Vector2.right * m_LookDirection.x * 0.90f,
                         Quaternion.AngleAxis(angle, Vector3.forward));
 
-        GameObject projectileObject = Instantiate(usedProjectilePrefab, playerPos + Vector2.up * 0.13f + 
+        GameObject projectileObject = Instantiate(usedProjectile, playerPos + Vector2.up * 0.13f + 
                                     Vector2.right * m_LookDirection.x * 0.95f, 
                                     Quaternion.AngleAxis(angle, Vector3.forward));
 
@@ -650,8 +659,8 @@ public class PlayerController : MonoBehaviour
     void SetJetpackParams(float fuel, float jetpackBoost)
     {
         Instantiate(jetpackCanvas, Vector3.zero, Quaternion.identity);
-        m_MaxJetpackFuel = fuel;
-        m_CurrentJetpackFuel = m_MaxJetpackFuel;
+        maxJetpackFuel = fuel;
+        m_CurrentJetpackFuel = maxJetpackFuel;
         m_JetpackBoostVelocity = jetpackBoost;
     }
 
@@ -659,7 +668,7 @@ public class PlayerController : MonoBehaviour
     {
         shootDamage = newDamage;
         projectileForce = newProjectileForce;
-        usedProjectilePrefab = nuclearGunProjectile;
+        usedProjectile = nuclearGunProjectile;
     }
 
     void SetIronSkin(float modifier)
@@ -685,5 +694,12 @@ public class PlayerController : MonoBehaviour
     void PlaySound(AudioClip clip)
     {
         m_AudioSource.PlayOneShot(clip);
+    }
+
+    public void DestroyPlayer()
+    {
+        UIHealth.Instance.DestroyUI();
+        UIJetpack.Instance.DestroyUI();
+        Destroy(gameObject);
     }
 }

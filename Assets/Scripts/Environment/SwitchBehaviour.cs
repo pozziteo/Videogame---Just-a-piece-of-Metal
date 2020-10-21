@@ -81,4 +81,9 @@ public class SwitchBehaviour : MonoBehaviour
             DisplayMessage();
         }
     }
+
+    public void DestroySwitch()
+    {
+        Destroy(gameObject);
+    }
 }

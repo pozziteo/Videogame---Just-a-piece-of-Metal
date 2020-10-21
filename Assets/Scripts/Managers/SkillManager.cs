@@ -40,4 +40,14 @@ public class SkillManager
             m_LevelManager.RegisterSkill(belongingScene, unlocker);
         }
     }
+
+    public void DestroySkills()
+    {
+        while (m_AllSkills.Count != 0)
+        {
+            SkillUnlocker unlocker = m_AllSkills[0];
+            m_AllSkills.Remove(unlocker);
+            unlocker.DestroySkill();
+        }
+    }
 }
