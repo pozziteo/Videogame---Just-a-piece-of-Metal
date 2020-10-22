@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
     {
         mainCamera.m_Follow = null;
         yield return new WaitForEndOfFrame();
-        mainCamera.m_Follow = GameObject.Find("Player").gameObject.transform;
+        mainCamera.m_Follow = GameObject.Find("Player").transform;
     }
 
     public void TurnOnAlarm()
