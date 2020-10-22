@@ -168,10 +168,17 @@ public class GameManager : MonoBehaviour
 
     void MoveInScene()
     {
+        StartCoroutine(CameraMove());
         DoorBehaviour otherDoor = DoorsManager.Instance.FindDoor(m_NextDoorLevel);
         PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
         PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
-        mainCamera.m_Follow = PlayerController.Player.gameObject.transform;
+    }
+
+    public IEnumerator CameraMove()
+    {
+        mainCamera.m_Follow = null;
+        yield return new WaitForEndOfFrame();
+        mainCamera.m_Follow = GameObject.Find("Player").gameObject.transform;
     }
 
     public void TurnOnAlarm()

@@ -384,6 +384,7 @@ public class PlayerController : MonoBehaviour
 
     public static void MoveToSpawnpoint(GameObject spawnPoint)
     {
+        GameManager.Instance.StartCoroutine(GameManager.Instance.CameraMove());
         Player.gameObject.transform.position = spawnPoint.transform.position;
     }
 
