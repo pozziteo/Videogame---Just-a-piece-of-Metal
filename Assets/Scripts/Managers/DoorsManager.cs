@@ -59,5 +59,6 @@ public class DoorsManager
             m_AllDoors.Remove(door);
             door.DestroyDoor();
         }
+        instance = null;
     }
 }

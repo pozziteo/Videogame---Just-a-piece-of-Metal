@@ -953,10 +953,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "You are a robot and you wake up in an unknown place. \n\nBy listening
-    to people, you find out that you are in a factory and you have been kidnapped
-    to be disassembled, so that the metal you are made of will be used to create
-    new deadly weapons.\n\nYou are NOT just a piece of metal.\n\nMake your way through
-    the factory, find better equipment and run away from this place.\n"
+    to some soliders nearby, you find out that you are in a factory and you have
+    been kidnapped to be disassembled, so that the metal you are made of will be
+    used to create new deadly weapons.\n\nYou are NOT just a piece of metal.\n\nMake
+    your way through the factory, find better equipment and run away from this place.\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ccc3d76e624873240ae94d47247d1918, type: 2}
   m_sharedMaterial: {fileID: 5669293719207983021, guid: ccc3d76e624873240ae94d47247d1918,

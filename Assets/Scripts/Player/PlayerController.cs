@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
     
     void Awake()
     {
-        if (Player == null)
+        if (player == null)
         {
             player = this;
             DontDestroyOnLoad(this);
@@ -702,6 +702,7 @@ public class PlayerController : MonoBehaviour
     {
         UIHealth.Instance.DestroyUI();
         UIJetpack.Instance.DestroyUI();
+        player = null;
         Destroy(gameObject);
     }
 }

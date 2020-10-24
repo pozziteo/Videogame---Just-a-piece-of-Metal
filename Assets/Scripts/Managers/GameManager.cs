@@ -110,10 +110,13 @@ public class GameManager : MonoBehaviour
             DoorBehaviour otherDoor = DoorsManager.Instance.FindDoor(m_NextDoorLevel);
             PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
             PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
+            
         }
         else
         {
+            Cursor.visible = false;
             m_GameStarted = true;
+            StartCoroutine(CameraMove());
         }
     }
 
@@ -124,12 +127,14 @@ public class GameManager : MonoBehaviour
         CanvasGroup canvas = m_PauseCanvas.GetComponent<CanvasGroup>();
         canvas.alpha = 0.7f;
         Time.timeScale = 0f;
+        Cursor.visible = true;
     }
 
     void RestartGame()
     {
         m_GamePaused = false;
         Time.timeScale = 1f;
+        Cursor.visible = false;
         Destroy(m_PauseCanvas);
     }
 
@@ -168,16 +173,16 @@ public class GameManager : MonoBehaviour
 
     void MoveInScene()
     {
-        StartCoroutine(CameraMove());
         DoorBehaviour otherDoor = DoorsManager.Instance.FindDoor(m_NextDoorLevel);
         PlayerController.Player.SetCurrentCheckpoint(otherDoor.gameObject);
         PlayerController.MoveToSpawnpoint(otherDoor.gameObject);
+        StartCoroutine(CameraMove());
     }
 
     public IEnumerator CameraMove()
     {
         mainCamera.m_Follow = null;
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.2f);
         mainCamera.m_Follow = GameObject.Find("Player").transform;
     }
 
@@ -281,6 +286,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
         Destroy(BackgroundMusicPlayer.MusicPlayer.gameObject);
+        instance = null;
         Destroy(gameObject);
     }
 

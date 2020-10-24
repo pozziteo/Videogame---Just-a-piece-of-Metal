@@ -32,6 +32,7 @@ public class UIHealth : MonoBehaviour
 
     public void DestroyUI()
     {
+        instance = null;
         Destroy(gameObject);
     }
 

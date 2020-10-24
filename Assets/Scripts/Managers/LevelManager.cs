@@ -169,5 +169,7 @@ public class LevelManager
 
         SkillManager.Instance.DestroySkills();
         skillsInScene.Clear();
+
+        instance = null;
     }
 }

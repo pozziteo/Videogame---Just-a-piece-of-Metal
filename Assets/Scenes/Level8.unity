@@ -26043,12 +26043,12 @@ PrefabInstance:
     - target: {fileID: 2643355311726579084, guid: ee39b11f253179d4dafb8185961b452a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.63002
+      value: -150.83002
       objectReference: {fileID: 0}
     - target: {fileID: 2643355311726579084, guid: ee39b11f253179d4dafb8185961b452a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 63.1272
+      value: 63.2272
       objectReference: {fileID: 0}
     - target: {fileID: 2643355311726579087, guid: ee39b11f253179d4dafb8185961b452a,
         type: 3}
@@ -26058,12 +26058,12 @@ PrefabInstance:
     - target: {fileID: 4833833043972078233, guid: ee39b11f253179d4dafb8185961b452a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -140.98958
+      value: -140.99422
       objectReference: {fileID: 0}
     - target: {fileID: 4833833043972078233, guid: ee39b11f253179d4dafb8185961b452a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 63.127205
+      value: 63.227196
       objectReference: {fileID: 0}
     - target: {fileID: 6476230851484328449, guid: ee39b11f253179d4dafb8185961b452a,
         type: 3}
@@ -26409,7 +26409,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -135.78}
+  m_AnchoredPosition: {x: 72, y: -135.78}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1169260312
@@ -26439,7 +26439,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: rhhshts
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ccc3d76e624873240ae94d47247d1918, type: 2}
   m_sharedMaterial: {fileID: 5669293719207983021, guid: ccc3d76e624873240ae94d47247d1918,
@@ -26474,7 +26474,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 100
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -27089,12 +27089,12 @@ PrefabInstance:
     - target: {fileID: 3452748236262305344, guid: 93362d8cddebea341938574886e2c2e6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -156.1
+      value: -157.3
       objectReference: {fileID: 0}
     - target: {fileID: 3452748236262305344, guid: 93362d8cddebea341938574886e2c2e6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.2
+      value: 29.3
       objectReference: {fileID: 0}
     - target: {fileID: 3452748236262305344, guid: 93362d8cddebea341938574886e2c2e6,
         type: 3}

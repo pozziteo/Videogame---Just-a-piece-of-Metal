@@ -49,5 +49,6 @@ public class SkillManager
             m_AllSkills.Remove(unlocker);
             unlocker.DestroySkill();
         }
+        instance = null;
     }
 }

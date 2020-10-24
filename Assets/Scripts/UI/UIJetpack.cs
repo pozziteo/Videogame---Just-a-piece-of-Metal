@@ -27,6 +27,7 @@ public class UIJetpack : MonoBehaviour
 
     public void DestroyUI()
     {
+        instance = null;
         Destroy(gameObject);
     }
 }

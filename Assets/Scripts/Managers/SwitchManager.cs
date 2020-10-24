@@ -47,5 +47,6 @@ public class SwitchManager
             m_AllSwitches.Remove(swit);
             swit.DestroySwitch();
         }
+        instance = null;
     }
 }

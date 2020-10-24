@@ -51,6 +51,7 @@ public class EnemySpawnerManager : MonoBehaviour
 
     public void DestroyManager()
     {
+        instance = null;
         Destroy(gameObject);
     }
 
