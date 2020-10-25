@@ -299,9 +299,20 @@ public class GameManager : MonoBehaviour
 
     IEnumerator DestroyAllObjects()
     {
-        LevelManager.Instance.DestroyAllPersistentObjects();
-        PlayerController.Player.DestroyPlayer();
-        EnemySpawnerManager.Instance.DestroyManager();
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.DestroyAllPersistentObjects();
+        }
+
+        if (PlayerController.Player != null)
+        {
+            PlayerController.Player.DestroyPlayer();
+        }
+        
+        if (EnemySpawnerManager.Instance != null)
+        {
+            EnemySpawnerManager.Instance.DestroyManager();
+        }
         yield return null;
     }
 }

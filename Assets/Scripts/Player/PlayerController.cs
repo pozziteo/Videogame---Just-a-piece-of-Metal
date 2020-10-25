@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
         if (player == null)
         {
             player = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             m_PlayerSkills = PlayerSkills.GetSkills();
             m_PlayerSkills.OnSkillUnlocked += PlayerSkills_OnSkillUnlocked;
 
@@ -458,6 +458,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ChangeHealth(DieZone fromDieZone)
+    {
+        int indexSound = Random.Range(0, damageSounds.Count);
+        PlaySound(damageSounds[indexSound]);
+        m_CurrentHealth = 0f;
+        HealthBar.instance.SetValue(0f);
+        Die();
+    }
+
     void SpriteBlinkingEffect()
     {
         if (m_CurrentHealth == 0)
@@ -700,9 +709,32 @@ public class PlayerController : MonoBehaviour
 
     public void DestroyPlayer()
     {
-        UIHealth.Instance.DestroyUI();
-        UIJetpack.Instance.DestroyUI();
+        if (UIHealth.Instance != null)
+        {
+            UIHealth.Instance.DestroyUI();
+        }
+
+        if (UIJetpack.Instance != null)
+        {
+            UIJetpack.Instance.DestroyUI();
+        }
+
+        m_PlayerSkills.DestroySkills();
+        RestoreParameters();
+
         player = null;
         Destroy(gameObject);
+    }
+
+    void RestoreParameters()
+    {
+        MoveSpeed = 5f;      
+        JumpSpeed = 9f;    
+        MaxHealth = 8f;            
+        shootDamage = 1f;           
+        maxJetpackFuel = 0f;
+        projectileForce = 55f;
+        usedProjectile = baseProjectilePrefab;
+        m_CurrentHealth = MaxHealth;
     }
 }

@@ -29,10 +29,12 @@ public class MainMenu : MonoBehaviour
         transform.Find("Presents").gameObject.SetActive(false);
         transform.Find("Title").gameObject.SetActive(true);
         transform.Find("MainMenu").gameObject.SetActive(true);
+        Cursor.visible = true;
     }
 
     IEnumerator StartGame()
     {
+        Cursor.visible = false;
         transform.Find("Title").gameObject.SetActive(false);
         transform.Find("MainMenu").gameObject.SetActive(false);
         GameObject intro = transform.Find("Intro").gameObject;

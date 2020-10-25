@@ -111,4 +111,10 @@ public class PlayerSkills
         return m_UnlockedSkillsList.Contains(type);
     }
 
+    public void DestroySkills()
+    {
+        m_UnlockedSkillsList.Clear();
+        instance = null;
+    }
+
 }

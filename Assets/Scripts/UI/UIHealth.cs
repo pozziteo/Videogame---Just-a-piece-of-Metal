@@ -16,7 +16,7 @@ public class UIHealth : MonoBehaviour
     {
         if (instance == null)
         {
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             instance = this;
         }
         else

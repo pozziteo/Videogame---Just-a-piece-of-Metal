@@ -23,7 +23,7 @@ public class SwitchBehaviour : MonoBehaviour
         {
             m_SwitchManager.AddSwitch(gameObject.scene.name, this);
             m_AudioSource = GetComponent<AudioSource>();
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {

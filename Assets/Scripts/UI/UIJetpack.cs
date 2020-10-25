@@ -16,7 +16,7 @@ public class UIJetpack : MonoBehaviour
     {
         if (instance == null)
         {
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             instance = this;
         }
         else

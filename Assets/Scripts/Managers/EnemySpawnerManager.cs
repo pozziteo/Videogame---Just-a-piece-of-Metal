@@ -18,7 +18,7 @@ public class EnemySpawnerManager : MonoBehaviour
     {
         if (instance == null)
         {
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
             instance = this;
             m_EnemyToRespawn = new List<BaseEnemy>();
         }

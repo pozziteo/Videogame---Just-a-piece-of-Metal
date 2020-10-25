@@ -39,7 +39,7 @@ public class DoorBehaviour : MonoBehaviour
         {
             m_DoorsManager.AddDoor(gameObject.scene.name, this);
             m_AudioSource = GetComponent<AudioSource>();
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
