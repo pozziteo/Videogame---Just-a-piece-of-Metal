@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &310414292492716579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8436319908062794921}
+  m_Layer: 0
+  m_Name: SpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8436319908062794921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310414292492716579}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1821876487720194626}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &332750432520107413
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,6 +57,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 8436319908062794921}
   - {fileID: 3715912560393724282}
   - {fileID: 6188147389129554008}
   - {fileID: 6163793686560485510}
@@ -62,7 +93,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1821876487720194626}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &8830154966765210420
 BoxCollider2D:
@@ -119,7 +150,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1821876487720194626}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &4749055138533465482
 BoxCollider2D:
@@ -162,6 +193,10 @@ PrefabInstance:
       propertyPath: leftBoundary
       value: 
       objectReference: {fileID: 6163793686560485510}
+    - target: {fileID: 1545372334, guid: 41c2f1ed48349eb44baa872bfe414396, type: 3}
+      propertyPath: initialPosition
+      value: 
+      objectReference: {fileID: 8436319908062794921}
     - target: {fileID: 1406862015021228341, guid: 41c2f1ed48349eb44baa872bfe414396,
         type: 3}
       propertyPath: m_Volume
@@ -230,7 +265,7 @@ PrefabInstance:
     - target: {fileID: 4599697838161080928, guid: 41c2f1ed48349eb44baa872bfe414396,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4599697838161080928, guid: 41c2f1ed48349eb44baa872bfe414396,
         type: 3}

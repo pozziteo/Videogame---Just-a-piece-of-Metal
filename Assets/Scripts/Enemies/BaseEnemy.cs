@@ -9,6 +9,7 @@ public abstract class BaseEnemy : MonoBehaviour
     public float startHealth;
     public float enemyDamage;
     public ParticleSystem hurtEffect;
+    public Transform initialPosition;
     public Transform rightBoundary;
     public Transform leftBoundary;
     public float Health {
@@ -35,12 +36,10 @@ public abstract class BaseEnemy : MonoBehaviour
     protected Transform m_Target;
     protected bool m_EnemyDead;
     protected bool m_IsFixedEnemy;
-    Transform m_InitialPosition;
 
 
     protected virtual void Awake()
     {
-        m_InitialPosition = gameObject.transform;
         m_Animator = GetComponent<Animator>();
         m_RigidBody = GetComponent<Rigidbody2D>();
         m_AudioSource = GetComponent<AudioSource>();
@@ -182,7 +181,7 @@ public abstract class BaseEnemy : MonoBehaviour
 
     public void Respawn()
     {
-        gameObject.transform.position = m_InitialPosition.position;
+        gameObject.transform.position = initialPosition.position;
         ResetParameters();
     }
 
